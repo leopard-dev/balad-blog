@@ -10,9 +10,9 @@ $font-family-sans-serif: Samim;
 @import "/node_modules/bootstrap/scss/reboot";
 @import "/node_modules/bootstrap/scss/type";
 @import "/node_modules/bootstrap/scss/images";
-// @import "/node_modules/bootstrap/scss/grid";
+@import "/node_modules/bootstrap/scss/grid";
 // @import "/node_modules/bootstrap/scss/tables";
-// @import "/node_modules/bootstrap/scss/forms";
+@import "/node_modules/bootstrap/scss/forms";
 @import "/node_modules/bootstrap/scss/buttons";
 @import "/node_modules/bootstrap/scss/transitions";
 @import "/node_modules/bootstrap/scss/dropdown";
@@ -162,4 +162,14 @@ body {
 
 .comment__reply {
   @include button-outline-variant($teal-800, $teal-100, $teal-800, $teal-900);
+}
+// ADD COMMENT
+.add-comment__submit {
+  margin-block: 1rem;
+}
+
+.add-comment {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid gray;
 }

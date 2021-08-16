@@ -16,3 +16,10 @@ export interface GetPostComments {
   date: string;
   body: string;
 }
+
+export interface PostNewComment {
+  author: string;
+  date: string;
+  parent_id?: number;
+  body: string;
+}

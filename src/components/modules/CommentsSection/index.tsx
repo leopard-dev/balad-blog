@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getPostCommentsById } from "../../../services/post";
 import { GetPostComments } from "../../../services/post/types";
 import Comment from "../../elements/Comment";
+import AddComment from "../AddComment";
 
 type Props = {
   postId: number;
@@ -11,6 +12,9 @@ function CommentsSection({ postId }: Props) {
   const [comments, setComments] = useState<GetPostComments[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const onAddNewComment = (newComment: GetPostComments) => {
+    setComments((old) => [...old, newComment]);
+  };
   useEffect(() => {
     setIsLoading(false);
     getPostCommentsById(postId)
@@ -23,7 +27,11 @@ function CommentsSection({ postId }: Props) {
     const renderComment = (comment: GetPostComments) => {
       const children = comments.filter((item) => item.parent_id === comment.id);
       return (
-        <Comment key={comment.id} {...comment}>
+        <Comment
+          onAddNewComment={onAddNewComment}
+          key={comment.id}
+          {...comment}
+        >
           {children.map(renderComment)}
         </Comment>
       );
@@ -41,6 +49,7 @@ function CommentsSection({ postId }: Props) {
       )}
       {isError && <p className="comments-section__error">خطایی رخ داد ...</p>}
       {processedComments}
+      <AddComment postId={postId} onCommentSubmit={onAddNewComment} />
     </section>
   );
 }

@@ -1,9 +1,24 @@
-import React, { Children } from "react";
+import React, { useState } from "react";
 import { GetPostComments } from "../../../services/post/types";
+import AddComment from "../../modules/AddComment";
 
-type Props = { children?: React.ReactNode } & GetPostComments;
+type Props = {
+  children?: React.ReactNode;
+  onAddNewComment: (comment: GetPostComments) => void;
+} & GetPostComments;
 
-function Comment({ author, body, date, id, children, parent_id }: Props) {
+function Comment({
+  author,
+  body,
+  date,
+  id,
+  children,
+  parent_id,
+  onAddNewComment,
+  post_id,
+}: Props) {
+  const [isReplying, setIsReplying] = useState(false);
+
   return (
     <article
       className={`comment ${parent_id ? "comment--is-child" : ""}`}
@@ -17,7 +32,20 @@ function Comment({ author, body, date, id, children, parent_id }: Props) {
         <p className="comment__footer-element">{date}</p>
       </footer>
       <p className="comment__body">{body}</p>
-      <button className="comment__reply ">پاسخ به این نظر</button>
+      {isReplying ? (
+        <AddComment
+          onCommentSubmit={(comment) => {
+            onAddNewComment(comment);
+            setIsReplying(false);
+          }}
+          parentId={id}
+          postId={post_id}
+        />
+      ) : (
+        <button onClick={() => setIsReplying(true)} className="comment__reply ">
+          پاسخ به این نظر
+        </button>
+      )}
       {children}
     </article>
   );
