@@ -5,20 +5,20 @@ function SideBar() {
   return (
     <nav className={styles["app-sidebar"]}>
       <h2 className={styles["app-sidebar__title"]}>لینک های بلاگ</h2>
-      <ul className="app-sidebar__links">
-        <li className="app-sidebar__link">
+      <ul className={styles["app-sidebar__links"]}>
+        <li className={styles["app-sidebar__link-item"]}>
           <Link href="/" passHref>
-            <a>صفحه نخست</a>
+            <a className={styles["app-sidebar__link"]}>صفحه نخست</a>
           </Link>
         </li>
-        <li className="app-sidebar__link">
+        <li className={styles["app-sidebar__link-item"]}>
           <Link href="/" passHref>
-            <a>درباره من</a>
+            <a className={styles["app-sidebar__link"]}>درباره من</a>
           </Link>
         </li>
-        <li className="app-sidebar__link">
+        <li className={styles["app-sidebar__link-item"]}>
           <Link href="/" passHref>
-            <a>تماس با من</a>
+            <a className={styles["app-sidebar__link"]}>تماس با من</a>
           </Link>
         </li>
       </ul>
