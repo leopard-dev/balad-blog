@@ -1,0 +1,14 @@
+@import "/node_modules/bootstrap/scss/functions";
+@import "/node_modules/bootstrap/scss/variables";
+
+.app-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background-color: rgb(241, 241, 241);
+  border-radius: 8px;
+  padding-block: 20px;
+  padding-inline: 10px;
+}
+.app-sidebar__title {
+  font-size: $h4-font-size;
+}
