@@ -7,10 +7,7 @@ const Home: NextPage = ({ posts }: any) => {
   return (
     <>
       {posts.map((post: GetPostsResponse) => (
-        <>
-          <BlogPostListItem key={post.id} {...post} />
-          <hr />
-        </>
+        <BlogPostListItem key={post.id} {...post} />
       ))}
     </>
   );
