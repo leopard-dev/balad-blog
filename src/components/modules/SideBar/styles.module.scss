@@ -5,9 +5,10 @@
   width: 300px;
   flex-shrink: 0;
   background-color: rgb(241, 241, 241);
-  border-radius: 8px;
+  border-radius: 4px;
   padding-block: 20px;
   padding-inline: 10px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 .app-sidebar__title {
   font-size: $h4-font-size;
