@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, LegacyRef, useRef, useState } from "react";
 import { postComment } from "../../../services/post";
 import { GetPostComments } from "../../../services/post/types";
 import { getLocaleDay } from "../../../utils/date";
@@ -13,6 +13,7 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
   const [comment, setComment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const commentRef = useRef<any>(null);
   const submitComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsError(false);
@@ -49,11 +50,17 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
         </div>
         <div className="form-group">
           <label htmlFor={`field-comment-${parentId}`}> متن نظر</label>
-          <input
+          <textarea
+            ref={commentRef}
             disabled={isLoading}
             name="comment"
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            onChange={(e) => {
+              setComment(e.target.value);
+              commentRef.current!.style.height = "inherit";
+              commentRef.current!.style.height =
+                commentRef.current!.scrollHeight + "px";
+            }}
             className="form-control"
             id={`field-${parentId}`}
           />
