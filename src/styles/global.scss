@@ -1,6 +1,7 @@
 body {
   direction: rtl;
 }
+$font-family-sans-serif: Samim;
 
 @import "/node_modules/bootstrap/scss/functions";
 @import "/node_modules/bootstrap/scss/variables";
@@ -125,4 +126,40 @@ body {
 // footer
 .footer {
   margin-top: 20px;
+}
+
+// Comment Section
+
+.comments-section {
+  margin-block: 2rem;
+  margin-inline-start: 2rem;
+}
+
+.comments-section__title {
+  font-size: $h4-font-size;
+  margin-block-end: 1rem;
+}
+
+.comments-section__loading {
+  text-align: center;
+}
+
+.comments-section__error {
+  text-align: center;
+}
+
+// Comment
+.comment {
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: white;
+  margin-block: 1rem;
+}
+.comment--is-child {
+  margin-inline-start: 2rem;
+  border: 1px solid gray;
+}
+
+.comment__reply {
+  @include button-outline-variant($teal-800, $teal-100, $teal-800, $teal-900);
 }

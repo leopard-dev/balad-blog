@@ -2,7 +2,9 @@ import { GetPostsResponse } from "../../../services/post/types";
 import Link from "next/link";
 import parse from "html-react-parser";
 
-type Props = {} & GetPostsResponse;
+type Props = {
+  children?: React.ReactNode;
+} & GetPostsResponse;
 
 function BlogPostListItem({
   author,
@@ -12,6 +14,7 @@ function BlogPostListItem({
   id,
   title,
   visits,
+  children,
 }: Props) {
   return (
     <article className="blog-post">
@@ -24,6 +27,7 @@ function BlogPostListItem({
         ارسال شده توسط {author} در تاریخ {date}
       </p>
       <div className="blog-post__content">{parse(body)}</div>
+      {children}
     </article>
   );
 }

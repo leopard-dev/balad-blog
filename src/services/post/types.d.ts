@@ -7,3 +7,12 @@ export interface GetPostsResponse {
   body: string;
   author: string;
 }
+
+export interface GetPostComments {
+  id: number;
+  author: string;
+  post_id: number;
+  parent_id: number | null;
+  date: string;
+  body: string;
+}
