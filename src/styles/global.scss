@@ -113,19 +113,3 @@ body {
 .comments-section__error {
   text-align: center;
 }
-
-// Comment
-.comment {
-  padding: 0.5rem;
-  border-radius: 4px;
-  background-color: white;
-  margin-block: 1rem;
-}
-.comment--is-child {
-  margin-inline-start: 2rem;
-  border: 1px solid gray;
-}
-
-.comment__reply {
-  @include button-outline-variant($teal-800, $teal-100, $teal-800, $teal-900);
-}
