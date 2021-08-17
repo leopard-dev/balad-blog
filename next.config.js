@@ -7,5 +7,6 @@ module.exports = withSass({
 module.exports = {
   sassOptions: {
     includePaths: [path.join(__dirname, "src", "styles")],
+    prependData: `@import "./src/styles/variables.scss";`,
   },
 };
