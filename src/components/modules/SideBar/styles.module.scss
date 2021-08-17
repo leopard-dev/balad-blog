@@ -1,8 +1,4 @@
-@import "/node_modules/bootstrap/scss/functions";
-@import "/node_modules/bootstrap/scss/variables";
-@import "/node_modules/bootstrap/scss/mixins";
-
-.app-sidebar {
+c.app-sidebar {
   width: 300px;
   @include media-breakpoint-down(sm) {
     // Larger than sm: 576px
