@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getPostCommentsById } from "../../../services/post";
 import { GetPostComments } from "../../../services/post/types";
+import { createDataTree } from "../../../utils/create-data-tree";
 import Comment from "../../elements/Comment";
 import styles from "./styles.module.scss";
 
@@ -27,17 +28,15 @@ function CommentsSection({ postId }: Props) {
   }, [fetchComments, postId]);
 
   const processedComments = useMemo(() => {
-    const renderComment = (comment: GetPostComments) => {
-      const children = comments.filter((item) => item.parent_id === comment.id);
+    const processed = createDataTree(comments);
+    const renderComment = (comment: any) => {
       return (
         <Comment key={comment.id} {...comment}>
-          {children.map(renderComment)}
+          {comment.childNodes.map(renderComment)}
         </Comment>
       );
     };
-    return comments
-      .filter((item) => item.parent_id === null)
-      .map(renderComment);
+    return processed.map(renderComment);
   }, [comments]);
 
   return (
