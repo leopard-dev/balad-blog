@@ -2,19 +2,31 @@ import { API_URL } from "../../constants";
 import { GetPostComments, GetPostsResponse, PostNewComment } from "./types";
 
 export const getAllPosts = async (): Promise<GetPostsResponse[]> => {
-  return (await fetch(`${API_URL}/posts`)).json();
+  const res = await fetch(`${API_URL}/posts`);
+  if (!res.ok) {
+    throw new Error("something went wrong");
+  }
+  return res.json();
 };
 
 export const getPostById = async (
   postId: number
 ): Promise<GetPostsResponse> => {
-  return (await fetch(`${API_URL}/posts/${postId}`)).json();
+  const res = await fetch(`${API_URL}/posts/${postId}`);
+  if (!res.ok) {
+    throw new Error("something went wrong");
+  }
+  return res.json();
 };
 
 export const getPostCommentsById = async (
   postId: number
 ): Promise<GetPostComments[]> => {
-  return (await fetch(`${API_URL}/posts/${postId}/comments`)).json();
+  const res = await fetch(`${API_URL}/posts/${postId}/comments`);
+  if (!res.ok) {
+    throw new Error("something went wrong");
+  }
+  return res.json();
 };
 
 export const postComment = async (postId: number, body: PostNewComment) => {

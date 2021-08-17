@@ -1,0 +1,15 @@
+.app-header {
+  padding: 1.5rem 0;
+  width: 100%;
+  max-width: map-get($map: $container-max-widths, $key: lg);
+  margin: 0 auto;
+}
+
+.app-header__title {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.app-header__sub-title {
+  font-size: $h4-font-size;
+}

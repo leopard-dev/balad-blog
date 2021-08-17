@@ -1,0 +1,23 @@
+.blog-post__title-link {
+  text-decoration: none;
+  color: #c09a03;
+  font-weight: 800;
+  &:hover {
+    color: #a18101;
+  }
+}
+
+.blog-post__sub-title {
+  font-size: 14px;
+  color: #535353;
+  margin: 25px 0;
+}
+
+.blog-post {
+  border-bottom: 1px solid #535353;
+  margin: 20px 10px;
+  padding: 10px 0;
+  &:last-of-type {
+    border-bottom: none;
+  }
+}

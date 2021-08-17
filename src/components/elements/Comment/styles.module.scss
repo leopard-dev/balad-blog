@@ -1,0 +1,15 @@
+.comment {
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: white;
+  margin-block: 1rem;
+}
+
+.comment--is-child {
+  margin-inline-start: 2rem;
+  border: 1px solid gray;
+}
+
+.comment__footer {
+  font-size: 14px;
+}

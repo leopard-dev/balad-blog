@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { getPostCommentsById } from "../../../services/post";
 import { GetPostComments } from "../../../services/post/types";
+import { createDataTree } from "../../../utils/create-data-tree";
 import Comment from "../../elements/Comment";
 import AddComment from "../AddComment";
+import styles from "./styles.module.scss";
 
 type Props = {
   postId: number;
@@ -15,39 +17,49 @@ function CommentsSection({ postId }: Props) {
   const onAddNewComment = (newComment: GetPostComments) => {
     setComments((old) => [...old, newComment]);
   };
-  useEffect(() => {
-    setIsLoading(false);
-    getPostCommentsById(postId)
+
+  const fetchComments = useCallback((pId: number) => {
+    setIsLoading(true);
+    setIsError(false);
+    getPostCommentsById(pId)
       .then(setComments)
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
-  }, [postId]);
+  }, []);
+
+  useEffect(() => {
+    fetchComments(postId);
+  }, [fetchComments, postId]);
 
   const processedComments = useMemo(() => {
-    const renderComment = (comment: GetPostComments) => {
-      const children = comments.filter((item) => item.parent_id === comment.id);
+    const processed = createDataTree(comments);
+    const renderComment = (comment: any) => {
       return (
-        <Comment
-          onAddNewComment={onAddNewComment}
-          key={comment.id}
-          {...comment}
-        >
-          {children.map(renderComment)}
+        <Comment key={comment.id} {...comment} onAddNewComment={onAddNewComment}>
+          {comment.childNodes.map(renderComment)}
         </Comment>
       );
     };
-    return comments
-      .filter((item) => item.parent_id === null)
-      .map(renderComment);
+    return processed.map(renderComment);
   }, [comments]);
 
   return (
-    <section className="comments-section">
-      <h1 className="comments-section__title">لیست نظرات</h1>
+    <section className={styles["comments-section"]}>
+      <h1 className={styles["comments-section__title"]}>لیست نظرات</h1>
       {isLoading && (
-        <p className="comments-section__loading">لطفا صبر کنید ...</p>
+        <p className={styles["comments-section__loading"]}>لطفا صبر کنید ...</p>
       )}
-      {isError && <p className="comments-section__error">خطایی رخ داد ...</p>}
+      {isError && (
+        <p className={styles["comments-section__error"]}>
+          خطایی رخ داد ...{" "}
+          <button
+            className="btn btn-link"
+            onClick={() => fetchComments(postId)}
+          >
+            تلاش مجدد
+          </button>
+        </p>
+      )}
       {processedComments}
       <AddComment postId={postId} onCommentSubmit={onAddNewComment} />
     </section>

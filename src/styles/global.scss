@@ -1,11 +1,7 @@
 body {
   direction: rtl;
 }
-$font-family-sans-serif: Samim;
-
-@import "/node_modules/bootstrap/scss/functions";
-@import "/node_modules/bootstrap/scss/variables";
-@import "/node_modules/bootstrap/scss/mixins";
+@import "./variables.scss";
 @import "/node_modules/bootstrap/scss/root";
 @import "/node_modules/bootstrap/scss/reboot";
 @import "/node_modules/bootstrap/scss/type";
@@ -50,7 +46,7 @@ $font-family-sans-serif: Samim;
 
 // BODY
 body {
-  background-color: rgb(235, 235, 235);
+  background-color: rgb(237, 237, 238);
   color: #222;
   display: flex;
   flex-direction: column;
@@ -61,28 +57,13 @@ body {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  padding: 0 1rem;
 }
 
-.app-header,
 .content,
 .footer {
   max-width: map-get($map: $container-max-widths, $key: lg);
   margin: 0 auto;
-}
-
-// APP HEADER
-.app-header {
-  padding-block: 20px;
-  text-align: center;
-}
-
-.app-header__title {
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.app-header__sub-title {
-  font-size: $h4-font-size;
 }
 
 // CONTENT
@@ -96,80 +77,15 @@ body {
   gap: 40px;
 }
 
-// SIDEBAR
-
-.app-sidebar {
-  width: 300px;
-  flex-shrink: 0;
-  background-color: rgb(241, 241, 241);
-  border-radius: 8px;
-  padding-block: 20px;
-  padding-inline: 10px;
-}
-.app-sidebar__title {
-  font-size: $h4-font-size;
-}
-
 // PAGE CONTAINER
 .page-container {
   background-color: rgb(241, 241, 241);
-  border-radius: 8px;
-  padding-block: 20px;
-  padding-inline: 10px;
-}
-
-// ARTICLE LIST ITEM
-.blog-post__title-link {
-  text-decoration: none;
+  border-radius: 4px;
+  padding: 20px 10px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 // footer
 .footer {
   margin-top: 20px;
-}
-
-// Comment Section
-
-.comments-section {
-  margin-block: 2rem;
-  margin-inline-start: 2rem;
-}
-
-.comments-section__title {
-  font-size: $h4-font-size;
-  margin-block-end: 1rem;
-}
-
-.comments-section__loading {
-  text-align: center;
-}
-
-.comments-section__error {
-  text-align: center;
-}
-
-// Comment
-.comment {
-  padding: 0.5rem;
-  border-radius: 4px;
-  background-color: white;
-  margin-block: 1rem;
-}
-.comment--is-child {
-  margin-inline-start: 2rem;
-  border: 1px solid gray;
-}
-
-.comment__reply {
-  @include button-outline-variant($teal-800, $teal-100, $teal-800, $teal-900);
-}
-// ADD COMMENT
-.add-comment__submit {
-  margin-block: 1rem;
-}
-
-.add-comment {
-  padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid gray;
 }

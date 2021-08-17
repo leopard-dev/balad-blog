@@ -1,7 +1,10 @@
-import { FormEvent, LegacyRef, useRef, useState } from "react";
+import clsx from "clsx";
+import { FormEvent, useRef, useState } from "react";
 import { postComment } from "../../../services/post";
 import { GetPostComments } from "../../../services/post/types";
 import { getLocaleDay } from "../../../utils/date";
+import styles from "./styles.module.scss";
+
 type Props = {
   postId: number;
   parentId?: number;
@@ -33,7 +36,7 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
       .finally(() => setIsLoading(false));
   };
   return (
-    <section className="add-comment">
+    <section className={styles["add-comment"]}>
       <h3 className="h4">اضافه کردن کامنت جدید</h3>
       <form onSubmit={submitComment}>
         <div className="form-group">
@@ -68,7 +71,11 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
         <button
           disabled={isLoading || !name || !comment}
           type="submit"
-          className="btn btn-primary add-comment__submit"
+          className={clsx(
+            "btn",
+            "btn-primary",
+            styles["add-comment__submit-btn"]
+          )}
         >
           {isLoading ? "لطفا صبر کنید" : "ثبت نظر"}
         </button>

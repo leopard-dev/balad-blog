@@ -1,6 +1,8 @@
+import clsx from "clsx";
 import React, { useState } from "react";
 import { GetPostComments } from "../../../services/post/types";
 import AddComment from "../../modules/AddComment";
+import styles from "./styles.module.scss";
 
 type Props = {
   children?: React.ReactNode;
@@ -21,11 +23,14 @@ function Comment({
 
   return (
     <article
-      className={`comment ${parent_id ? "comment--is-child" : ""}`}
+      className={clsx(
+        styles["comment"],
+        parent_id && styles["comment--is-child"]
+      )}
       id={`#c${id}`}
     >
       <link href={`#c${id}`} />
-      <footer className="comment__footer">
+      <footer className={styles["comment__footer"]}>
         <p className="comment__footer-element">
           ارسال شده توسط: <span>{author}</span>
         </p>
@@ -42,7 +47,7 @@ function Comment({
           postId={post_id}
         />
       ) : (
-        <button onClick={() => setIsReplying(true)} className="comment__reply ">
+        <button onClick={() => setIsReplying(true)} className="btn btn-secondary">
           پاسخ به این نظر
         </button>
       )}
