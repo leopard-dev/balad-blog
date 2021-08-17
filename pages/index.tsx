@@ -5,14 +5,11 @@ import { GetPostsResponse } from "../src/services/post/types";
 
 const Home: NextPage = ({ posts }: any) => {
   return (
-    <section>
+    <>
       {posts.map((post: GetPostsResponse) => (
-        <>
-          <BlogPostListItem key={post.id} {...post} />
-          <hr />
-        </>
+        <BlogPostListItem key={post.id} {...post} />
       ))}
-    </section>
+    </>
   );
 };
 

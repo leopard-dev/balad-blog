@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@zeit/next-sass": "^1.0.1",
     "bootstrap": "^5.1.0",
     "html-react-parser": "^1.2.8",
     "next": "11.1.0",
