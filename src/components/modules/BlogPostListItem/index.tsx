@@ -3,7 +3,7 @@ import Link from "next/link";
 import parse from "html-react-parser";
 import styles from "./styles.module.scss";
 
-type Props = {} & GetPostsResponse;
+type Props = GetPostsResponse;
 
 function BlogPostListItem({
   author,
