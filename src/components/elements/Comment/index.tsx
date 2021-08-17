@@ -1,4 +1,5 @@
-import React, { Children } from "react";
+import clsx from "clsx";
+import React from "react";
 import { GetPostComments } from "../../../services/post/types";
 
 type Props = { children?: React.ReactNode } & GetPostComments;
@@ -6,7 +7,7 @@ type Props = { children?: React.ReactNode } & GetPostComments;
 function Comment({ author, body, date, id, children, parent_id }: Props) {
   return (
     <article
-      className={`comment ${parent_id ? "comment--is-child" : ""}`}
+      className={clsx("comment", { "comment--is-child": !!parent_id })}
       id={`#c${id}`}
     >
       <link href={`#c${id}`} />
