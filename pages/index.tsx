@@ -13,7 +13,7 @@ const Home: NextPage = ({ posts }: any) => {
   );
 };
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const posts = await getAllPosts();
 
   return {
