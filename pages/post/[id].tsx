@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import BlogPostListItem from "../../src/components/modules/BlogPostListItem";
 import CommentsSection from "../../src/components/modules/CommentsSection";
-import { getAllPosts, getPostById } from "../../src/services/post";
+import { getPostById } from "../../src/services/post";
 const BlogPost: NextPage = ({ post }: any) => {
   return (
     <BlogPostListItem {...post}>
