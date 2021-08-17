@@ -20,7 +20,7 @@ function BlogPostListItem({
   return (
     <article className={styles["blog-post"]}>
       <h2>
-        <Link href={`/post/${id}`} passHref>
+        <Link href={`/post/${id}`}>
           <a className={styles["blog-post__title-link"]}>{title}</a>
         </Link>
       </h2>
