@@ -22,5 +22,9 @@ export const getPostById = async (
 export const getPostCommentsById = async (
   postId: number
 ): Promise<GetPostComments[]> => {
-  return (await fetch(`${API_URL}/posts/${postId}/comments`)).json();
+  const res = await fetch(`${API_URL}/posts/${postId}/comments`);
+  if (!res.ok) {
+    throw new Error("something went wrong");
+  }
+  return res.json();
 };
