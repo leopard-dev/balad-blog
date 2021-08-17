@@ -93,23 +93,3 @@ body {
 .footer {
   margin-top: 20px;
 }
-
-// Comment Section
-
-.comments-section {
-  margin-block: 2rem;
-  margin-inline-start: 2rem;
-}
-
-.comments-section__title {
-  font-size: $h4-font-size;
-  margin-block-end: 1rem;
-}
-
-.comments-section__loading {
-  text-align: center;
-}
-
-.comments-section__error {
-  text-align: center;
-}

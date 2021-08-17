@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { getPostCommentsById } from "../../../services/post";
 import { GetPostComments } from "../../../services/post/types";
 import Comment from "../../elements/Comment";
+import styles from "./styles.module.scss";
 
 type Props = {
   postId: number;
@@ -40,13 +41,13 @@ function CommentsSection({ postId }: Props) {
   }, [comments]);
 
   return (
-    <section className="comments-section">
-      <h1 className="comments-section__title">لیست نظرات</h1>
+    <section className={styles["comments-section"]}>
+      <h1 className={styles["comments-section__title"]}>لیست نظرات</h1>
       {isLoading && (
-        <p className="comments-section__loading">لطفا صبر کنید ...</p>
+        <p className={styles["comments-section__loading"]}>لطفا صبر کنید ...</p>
       )}
       {isError && (
-        <p className="comments-section__error">
+        <p className={styles["comments-section__error"]}>
           خطایی رخ داد ...{" "}
           <button
             className="btn btn-link"
