@@ -11,8 +11,9 @@
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
     "bootstrap": "^5.1.0",
-    "dayjs": "^1.10.6",
     "clsx": "^1.1.1",
+    "dayjs": "^1.10.6",
+    "formik": "^2.2.9",
     "html-react-parser": "^1.2.8",
     "jalaliday": "^2.3.0",
     "next": "11.1.0",
