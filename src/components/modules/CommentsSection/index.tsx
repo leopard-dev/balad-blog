@@ -14,9 +14,6 @@ function CommentsSection({ postId }: Props) {
   const [comments, setComments] = useState<GetPostComments[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const onAddNewComment = (newComment: GetPostComments) => {
-    setComments((old) => [...old, newComment]);
-  };
 
   const fetchComments = useCallback((pId: number) => {
     setIsLoading(true);
@@ -31,17 +28,30 @@ function CommentsSection({ postId }: Props) {
     fetchComments(postId);
   }, [fetchComments, postId]);
 
-  const processedComments = useMemo(() => {
-    const processed = createDataTree(comments);
-    const renderComment = (comment: any) => {
+  const onAddNewComment = useCallback(
+    () => (newComment: GetPostComments) =>
+      setComments((old) => [...old, newComment]),
+    []
+  );
+  const renderComment = useCallback(
+    (comment: any) => {
       return (
-        <Comment key={comment.id} {...comment} onAddNewComment={onAddNewComment}>
+        <Comment
+          key={comment.id}
+          {...comment}
+          onAddNewComment={onAddNewComment}
+        >
           {comment.childNodes.map(renderComment)}
         </Comment>
       );
-    };
+    },
+    [onAddNewComment]
+  );
+
+  const processedComments = useMemo(() => {
+    const processed = createDataTree(comments);
     return processed.map(renderComment);
-  }, [comments]);
+  }, [comments, renderComment]);
 
   return (
     <section className={styles["comments-section"]}>
