@@ -4,8 +4,8 @@ import styles from "./styles.module.scss";
 
 type Props = { label: string; [key: string]: any };
 
-function InputField({ label, ...props }: Props) {
-  const [field, meta, helpers] = useField(props as any);
+function InputField({ label, validate, ...props }: Props) {
+  const [field, meta, helpers] = useField({ ...props, validate } as any);
   return (
     <div className={clsx("form-group", styles["input-field-container"])}>
       <label htmlFor="exampleInputEmail1">{label}</label>
