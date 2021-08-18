@@ -1,7 +1,9 @@
 import { Form, Formik } from "formik";
 import type { NextPage } from "next";
-import React, { useCallback } from "react";
+import { useRouter } from "next/dist/client/router";
+import React, { useCallback, useEffect } from "react";
 import InputField from "../src/components/elements/InputField";
+import useLocalStorage from "../src/hooks/use-local-storage";
 import { createUser, getUserByUsername } from "../src/services/user";
 
 const Register: NextPage = () => {
@@ -16,6 +18,19 @@ const Register: NextPage = () => {
     } catch {}
     return error;
   }, []);
+
+  const [token, setToken] = useLocalStorage<undefined | string>(
+    "session_key",
+    undefined
+  );
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (token) {
+      router.replace("/");
+    }
+  }, [token]);
 
   return (
     <>
