@@ -75,6 +75,7 @@ body {
   flex: 1 0 auto;
   display: flex;
   gap: 40px;
+  width: 100%;
 }
 
 // PAGE CONTAINER
@@ -82,6 +83,7 @@ body {
   background-color: rgb(241, 241, 241);
   border-radius: 4px;
   padding: 20px 10px;
+  flex: 1;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
