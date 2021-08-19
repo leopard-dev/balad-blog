@@ -23,3 +23,9 @@ export interface PostNewComment {
   parent_id?: number;
   body: string;
 }
+
+export interface PostNewPost {
+  title: string;
+  body: string;
+  date: string;
+}
