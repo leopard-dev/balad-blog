@@ -24,7 +24,7 @@ function BlogPostListItem({
       <p className={styles["blog-post__sub-title"]}>
         ارسال شده توسط {author} در تاریخ {date}
       </p>
-      <div className="blog-post__content">{parse(body)}</div>
+      <div className={styles["blog-post__content"]}>{parse(body)}</div>
     </article>
   );
 }
