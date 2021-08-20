@@ -1,0 +1,25 @@
+.search-container__title {
+  font-size: $h4-font-size;
+  font-weight: 800;
+}
+
+.search-container__links {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.search-container__link-item {
+  margin: 10px 0;
+}
+
+.search-container__link {
+  color: #c09a03;
+  font-size: 18px;
+  font-weight: 600;
+  &:hover {
+    color: #a18101;
+  }
+  border: none;
+  text-decoration: none;
+}
