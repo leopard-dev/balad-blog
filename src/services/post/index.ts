@@ -1,8 +1,18 @@
 import { API_URL } from "../../constants";
 import { GetPostComments, GetPostsResponse, PostNewComment } from "./types";
 
-export const getAllPosts = async (): Promise<GetPostsResponse[]> => {
-  const res = await fetch(`${API_URL}/posts`);
+export const getAllPosts = async (
+  query?: string
+): Promise<GetPostsResponse[]> => {
+  let url = `${API_URL}/posts`;
+  if (query) {
+    url +=
+      "?" +
+      new URLSearchParams({
+        q: query,
+      });
+  }
+  const res = await fetch(url);
   if (!res.ok) {
     throw new Error("something went wrong");
   }
