@@ -1,28 +1,12 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+
 import BlogPostListItem from "../src/components/modules/BlogPostListItem";
+import { usePosts } from "../src/providers/PostProvider";
 import { getAllPosts } from "../src/services/post";
 import { GetPostsResponse } from "../src/services/post/types";
 
-const Home: NextPage = ({ posts }: any) => {
-  const [isLoading, setIsLoading] = useState(posts.length === 0);
-  const [isError, setIsError] = useState(false);
-  const [internalPosts, setInternalPosts] = useState(posts);
-
-  const fetchPosts = () => {
-    setIsLoading(true);
-    setIsError(false);
-    getAllPosts()
-      .then(setInternalPosts)
-      .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
-  };
-
-  useEffect(() => {
-    if (posts.length === 0) {
-      fetchPosts();
-    }
-  }, []);
+const Home: NextPage = () => {
+  const { isError, isLoading, posts, fetchPosts } = usePosts();
   return (
     <>
       {isLoading && <p>لطفا صبر کنید...</p>}
@@ -34,7 +18,7 @@ const Home: NextPage = ({ posts }: any) => {
           </button>
         </p>
       )}
-      {internalPosts.map((post: GetPostsResponse) => (
+      {posts.map((post: GetPostsResponse) => (
         <BlogPostListItem key={post.id} {...post} />
       ))}
     </>

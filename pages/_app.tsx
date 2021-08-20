@@ -1,12 +1,14 @@
 import type { AppProps } from "next/app";
-import React from "react";
+import "../src/styles/global.scss";
+
 import Footer from "../src/components/modules/Footer";
 import Header from "../src/components/modules/Header";
 import SideBar from "../src/components/modules/SideBar";
-import "../src/styles/global.scss";
+import PostProvider from "../src/providers/PostProvider";
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <PostProvider initialPosts={pageProps.posts ?? []}>
       <Header />
       <div className="content">
         <main className="page-container">
@@ -15,7 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <SideBar />
       </div>
       <Footer />
-    </>
+    </PostProvider>
   );
 }
 export default MyApp;
