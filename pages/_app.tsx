@@ -3,20 +3,23 @@ import "../src/styles/global.scss";
 
 import Footer from "../src/components/modules/Footer";
 import Header from "../src/components/modules/Header";
-import SideBar from "../src/components/modules/SideBar";
+import Sidebar from "../src/components/modules/Sidebar";
 import PostProvider from "../src/providers/PostProvider";
+import SearchHistoryProvider from "../src/providers/SearchHistoryProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <PostProvider initialPosts={pageProps.posts ?? []}>
-      <Header />
-      <div className="content">
-        <main className="page-container">
-          <Component {...pageProps} />
-        </main>
-        <SideBar />
-      </div>
-      <Footer />
+      <SearchHistoryProvider>
+        <Header />
+        <div className="content">
+          <main className="page-container">
+            <Component {...pageProps} />
+          </main>
+          <Sidebar />
+        </div>
+        <Footer />
+      </SearchHistoryProvider>
     </PostProvider>
   );
 }
