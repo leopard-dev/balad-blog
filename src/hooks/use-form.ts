@@ -18,10 +18,12 @@ type Validations<T extends {}> = Partial<Record<keyof T, Validation>>;
 export const useForm = <T extends Record<keyof T, any> = {}>(options?: {
   validations?: Validations<T>;
   initialValues?: Partial<T>;
-  onSubmit?: () => void;
+  onSubmit?: (data: T) => void;
 }) => {
   const [data, setData] = useState<T>((options?.initialValues || {}) as T);
   const [errors, setErrors] = useState<ErrorRecord<T>>({});
+
+  const clearForm = () => setData((options?.initialValues || {}) as T);
 
   const handleChange =
     <S extends unknown>(key: keyof T, sanitizeFn?: (value: string) => S) =>
@@ -33,8 +35,7 @@ export const useForm = <T extends Record<keyof T, any> = {}>(options?: {
       });
     };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const submit = async () => {
     const validations = options?.validations;
     if (validations) {
       let valid = true;
@@ -63,8 +64,13 @@ export const useForm = <T extends Record<keyof T, any> = {}>(options?: {
     setErrors({});
 
     if (options?.onSubmit) {
-      options.onSubmit();
+      options.onSubmit(data);
     }
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    submit();
   };
 
   return {
@@ -72,5 +78,7 @@ export const useForm = <T extends Record<keyof T, any> = {}>(options?: {
     handleChange,
     handleSubmit,
     errors,
+    clearForm,
+    submit,
   };
 };
