@@ -1,5 +1,12 @@
 import clsx from "clsx";
-import { FormEvent, useRef, useState } from "react";
+import {
+  FormEvent,
+  KeyboardEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { postComment } from "../../../services/post";
 import { GetPostComments } from "../../../services/post/types";
 import { getLocaleDay } from "../../../utils/date";
@@ -18,8 +25,7 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
   const [errors, setErrors] = useState<string[]>([]);
   const commentRef = useRef<any>(null);
 
-  const submitComment = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const submitComment = useCallback(async () => {
     setErrors([]);
     setIsLoading(true);
     postComment(postId, {
@@ -41,12 +47,25 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
         setErrors(["خطا در اتصال به سرور"]);
       })
       .finally(() => setIsLoading(false));
-  };
+  }, [comment, name, onCommentSubmit, parentId, postId]);
+
+  const keyDownEventHandler = useCallback((e: any) => {
+    if ((e.metaKey || e.ctrlKey) && e.code === "Enter") {
+      e.preventDefault();
+      if (!!name.trim() && !!comment.trim()) submitComment();
+    }
+  }, []);
 
   return (
     <section className={styles["add-comment"]}>
       <h3 className="h4">اضافه کردن کامنت جدید</h3>
-      <form onSubmit={submitComment}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitComment();
+        }}
+        onKeyDown={keyDownEventHandler}
+      >
         <div className="form-group">
           <label htmlFor={`field-${parentId}`}> نام شما</label>
           <input
@@ -84,7 +103,7 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
           </ul>
         )}
         <button
-          disabled={isLoading || !name || !comment}
+          disabled={isLoading || !name.trim() || !comment.trim()}
           type="submit"
           className={clsx(
             "btn",
