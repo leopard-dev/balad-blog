@@ -28,6 +28,7 @@ function BlogPostListItem({
         ارسال شده توسط {author} در تاریخ {date}
       </p>
       <div className={styles["blog-post__content"]}>{parse(body)}</div>
+      {children}
     </article>
   );
 }
