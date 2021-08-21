@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import BlogPostListItem from "../../src/components/modules/BlogPostListItem";
+import CommentsSection from "../../src/components/modules/CommentsSection";
 import { getPostById } from "../../src/services/post";
 
 const BlogPost: NextPage = ({ post, postId, error }: any) => {
@@ -35,7 +36,11 @@ const BlogPost: NextPage = ({ post, postId, error }: any) => {
           </button>
         </p>
       )}
-      {internalPost && <BlogPostListItem {...internalPost} />}
+      {internalPost && (
+        <BlogPostListItem {...internalPost}>
+          <CommentsSection postId={post.id} />
+        </BlogPostListItem>
+      )}
     </>
   );
 };

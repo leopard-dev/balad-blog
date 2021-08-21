@@ -3,7 +3,9 @@ import Link from "next/link";
 import parse from "html-react-parser";
 import styles from "./styles.module.scss";
 
-type Props = GetPostsResponse;
+type Props = {
+  children?: React.ReactNode;
+} & GetPostsResponse;
 
 function BlogPostListItem({
   author,
@@ -13,6 +15,7 @@ function BlogPostListItem({
   id,
   title,
   visits,
+  children,
 }: Props) {
   return (
     <article className={styles["blog-post"]}>

@@ -1,0 +1,18 @@
+.comments-section {
+  margin: 2rem 0;
+  margin-right: 2rem;
+}
+
+.comments-section__title {
+  font-size: $h4-font-size;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.comments-section__loading {
+  text-align: center;
+}
+
+.comments-section__error {
+  text-align: center;
+}
