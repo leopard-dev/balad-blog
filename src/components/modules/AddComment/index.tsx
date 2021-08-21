@@ -15,24 +15,30 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
   const [name, setName] = useState("");
   const [comment, setComment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
   const commentRef = useRef<any>(null);
   const submitComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsError(false);
+    setErrors([]);
     setIsLoading(true);
     postComment(postId, {
-      author: name,
-      body: comment,
+      author: name.trim(),
+      body: comment.trim(),
       date: getLocaleDay(Date.now()),
-      parent_id: parentId,
+      parent_id: parentId ?? null,
     })
       .then((res) => {
         onCommentSubmit(res);
         setName("");
         setComment("");
       })
-      .catch((e) => setIsError(true))
+      .catch((e) => {
+        if (e.errors) {
+          setErrors(e.errors);
+          return;
+        }
+        setErrors(["خطا در اتصال به سرور"]);
+      })
       .finally(() => setIsLoading(false));
   };
   return (
@@ -68,6 +74,13 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
             id={`field-${parentId}`}
           />
         </div>
+        {errors.length > 0 && (
+          <ul className={styles["add-comment__error"]}>
+            {errors.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        )}
         <button
           disabled={isLoading || !name || !comment}
           type="submit"
