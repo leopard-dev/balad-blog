@@ -6,7 +6,8 @@ interface Validation {
     message: string;
   };
   custom?: {
-    isValid: (value: string) => Promise<boolean> | boolean;
+    isValid: (value: string, data: any) => Promise<boolean> | boolean;
+    validateOnChange?: boolean;
     message: string;
   };
 }
@@ -25,10 +26,31 @@ export const useForm = <T extends Record<keyof T, any> = {}>(options?: {
 
   const clearForm = () => setData((options?.initialValues || {}) as T);
 
+  const validateOnChange = (key: keyof T, value: string) => {
+    Promise.resolve(
+      options?.validations?.[key]?.custom?.isValid(value, data)
+    ).then((isValid) => {
+      if (isValid) {
+        setErrors((old) => ({
+          ...old,
+          [key]: undefined,
+        }));
+        return;
+      }
+      setErrors((old) => ({
+        ...old,
+        [key]: options?.validations?.[key]?.custom?.message,
+      }));
+    });
+  };
+
   const handleChange =
     <S extends unknown>(key: keyof T, sanitizeFn?: (value: string) => S) =>
     (e: ChangeEvent<HTMLInputElement & HTMLSelectElement>) => {
       const value = sanitizeFn ? sanitizeFn(e.target.value) : e.target.value;
+      if (options?.validations?.[key]?.custom?.validateOnChange) {
+        validateOnChange(key, value as string);
+      }
       setData({
         ...data,
         [key]: value,
@@ -49,7 +71,7 @@ export const useForm = <T extends Record<keyof T, any> = {}>(options?: {
         }
 
         const custom = validation?.custom;
-        if (custom?.isValid && !(await custom.isValid(value))) {
+        if (custom?.isValid && !(await custom.isValid(value, data))) {
           valid = false;
           newErrors[key] = custom.message;
         }
