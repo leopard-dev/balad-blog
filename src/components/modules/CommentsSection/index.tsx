@@ -29,8 +29,7 @@ function CommentsSection({ postId }: Props) {
   }, [fetchComments, postId]);
 
   const onAddNewComment = useCallback(
-    () => (newComment: GetPostComments) =>
-      setComments((old) => [...old, newComment]),
+    (newComment: GetPostComments) => setComments((old) => [...old, newComment]),
     []
   );
   const renderComment = useCallback(
