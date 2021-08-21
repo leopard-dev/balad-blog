@@ -1,11 +1,13 @@
 import type { NextPage } from "next";
 import React, { useEffect, useState } from "react";
+
 import BlogPostListItem from "../../src/components/modules/BlogPostListItem";
 import CommentsSection from "../../src/components/modules/CommentsSection";
 import { getPostById } from "../../src/services/post";
-const BlogPost: NextPage = ({ post, postId }: any) => {
+
+const BlogPost: NextPage = ({ post, postId, error }: any) => {
   const [isLoading, setIsLoading] = useState(!post);
-  const [isError, setIsError] = useState(false);
+  const [isError, setIsError] = useState(!!error);
   const [internalPost, setInternalPost] = useState(post);
 
   const fetchPost = () => {
@@ -18,10 +20,10 @@ const BlogPost: NextPage = ({ post, postId }: any) => {
   };
 
   useEffect(() => {
-    if (!post) {
+    if (error?.type) {
       fetchPost();
     }
-  }, []);
+  }, [error?.type]);
 
   return (
     <>
@@ -45,13 +47,20 @@ const BlogPost: NextPage = ({ post, postId }: any) => {
 
 export async function getServerSideProps({ params }: any) {
   let post = null;
+  let error: any = null;
+
   try {
     post = await getPostById(params.id);
-  } catch {}
+  } catch {
+    error = {
+      type: "failed_to_fetch",
+    };
+  }
   return {
     props: {
       postId: params.id,
       post,
+      error,
     },
   };
 }

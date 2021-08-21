@@ -1,8 +1,11 @@
 import clsx from "clsx";
-import { FormEvent, useRef, useState } from "react";
+import { useCallback, useState } from "react";
+
+import { useForm } from "../../../hooks/use-form";
 import { postComment } from "../../../services/post";
 import { GetPostComments } from "../../../services/post/types";
 import { getLocaleDay } from "../../../utils/date";
+import InputField from "../../elements/InputField";
 import styles from "./styles.module.scss";
 
 type Props = {
@@ -12,73 +15,95 @@ type Props = {
 };
 
 function AddComment({ postId, parentId, onCommentSubmit }: Props) {
-  const [name, setName] = useState("");
-  const [comment, setComment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const commentRef = useRef<any>(null);
-  const submitComment = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsError(false);
-    setIsLoading(true);
-    postComment(postId, {
-      author: name,
-      body: comment,
-      date: getLocaleDay(Date.now()),
-      parent_id: parentId,
-    })
-      .then((res) => {
-        onCommentSubmit(res);
-        setName("");
-        setComment("");
+  const [requestErrors, setRequestErrors] = useState<string[]>([]);
+
+  const submitComment = useCallback(
+    async (data: any) => {
+      setRequestErrors([]);
+      setIsLoading(true);
+      postComment(postId, {
+        author: data.author,
+        body: data.body,
+        date: getLocaleDay(Date.now()),
+        parent_id: parentId ?? null,
       })
-      .catch((e) => setIsError(true))
-      .finally(() => setIsLoading(false));
-  };
+        .then((res) => {
+          onCommentSubmit(res);
+          clearForm();
+        })
+        .catch((e) => {
+          if (e.errors) {
+            setRequestErrors(e.errors);
+            return;
+          }
+          setRequestErrors(["خطا در اتصال به سرور"]);
+        })
+        .finally(() => setIsLoading(false));
+    },
+    [parentId, postId]
+  );
+
+  const { handleSubmit, handleChange, data, errors, clearForm, submit } =
+    useForm({
+      validations: {
+        author: {
+          required: { message: "وارد کردن نام الزامی است", value: true },
+        },
+        body: {
+          required: { message: "وارد کردن نظر الزامی است", value: true },
+        },
+      },
+      onSubmit: submitComment,
+      initialValues: {
+        author: "",
+        body: "",
+      },
+    });
+
+  const keyDownEventHandler = useCallback((e: any) => {
+    if ((e.metaKey || e.ctrlKey) && e.code === "Enter") {
+      e.preventDefault();
+      submit();
+    }
+  }, []);
+
   return (
     <section className={styles["add-comment"]}>
       <h3 className="h4">اضافه کردن کامنت جدید</h3>
-      <form onSubmit={submitComment}>
-        <div className="form-group">
-          <label htmlFor={`field-${parentId}`}> نام شما</label>
-          <input
-            disabled={isLoading}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            name="name"
-            type="text"
-            className="form-control"
-            id={`field-${parentId}`}
+      <form onSubmit={handleSubmit} onKeyDown={keyDownEventHandler}>
+        <fieldset disabled={isLoading}>
+          <InputField
+            label="نام شما"
+            value={data.author}
+            onChange={handleChange("author")}
+            error={errors.author}
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor={`field-comment-${parentId}`}> متن نظر</label>
-          <textarea
-            ref={commentRef}
-            disabled={isLoading}
-            name="comment"
-            value={comment}
-            onChange={(e) => {
-              setComment(e.target.value);
-              commentRef.current!.style.height = "inherit";
-              commentRef.current!.style.height =
-                commentRef.current!.scrollHeight + "px";
-            }}
-            className="form-control"
-            id={`field-${parentId}`}
+          <InputField
+            label="نظر شما"
+            value={data.body}
+            onChange={handleChange("body")}
+            inputType="textarea"
+            error={errors.body}
           />
-        </div>
-        <button
-          disabled={isLoading || !name || !comment}
-          type="submit"
-          className={clsx(
-            "btn",
-            "btn-primary",
-            styles["add-comment__submit-btn"]
+          {requestErrors.length > 0 && (
+            <ul className={styles["add-comment__error"]}>
+              {requestErrors.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
           )}
-        >
-          {isLoading ? "لطفا صبر کنید" : "ثبت نظر"}
-        </button>
+          <button
+            type="submit"
+            className={clsx(
+              "btn",
+              "btn-primary",
+              styles["add-comment__submit-btn"]
+            )}
+          >
+            {isLoading ? "لطفا صبر کنید" : "ثبت نظر"}
+          </button>
+        </fieldset>
       </form>
     </section>
   );
