@@ -17,6 +17,7 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const commentRef = useRef<any>(null);
+
   const submitComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors([]);
@@ -41,6 +42,7 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
       })
       .finally(() => setIsLoading(false));
   };
+
   return (
     <section className={styles["add-comment"]}>
       <h3 className="h4">اضافه کردن کامنت جدید</h3>
