@@ -46,6 +46,6 @@ export const loginUser = async (
   if (res.ok) {
     return res.json();
   } else {
-    throw new Error("failed to login user");
+    throw res.json();
   }
 };
