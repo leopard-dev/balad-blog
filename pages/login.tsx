@@ -1,6 +1,5 @@
 import InputField from "../src/components/elements/InputField";
 import { loginUser } from "../src/services/user";
-import isNotEmpty from "../src/utils/is-not-empty";
 
 import type { NextPage } from "next";
 import useLocalStorage from "../src/hooks/use-local-storage";
@@ -66,7 +65,6 @@ const Login: NextPage = () => {
       <fieldset disabled={isLoading}>
         <InputField
           value={data.username as string}
-          validate={isNotEmpty}
           label="نام کاربری"
           type="text"
           name="username"
