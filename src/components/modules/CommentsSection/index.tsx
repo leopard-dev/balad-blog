@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+
 import { getPostCommentsById } from "../../../services/post";
 import { GetPostComments } from "../../../services/post/types";
 import { createDataTree } from "../../../utils/create-data-tree";
-import Comment from "../../elements/Comment";
 import AddComment from "../AddComment";
+import CommentsTree from "../CommentsTree";
 import styles from "./styles.module.scss";
 
 type Props = {
@@ -32,25 +33,8 @@ function CommentsSection({ postId }: Props) {
     (newComment: GetPostComments) => setComments((old) => [...old, newComment]),
     []
   );
-  const renderComment = useCallback(
-    (comment: any) => {
-      return (
-        <Comment
-          key={comment.id}
-          {...comment}
-          onAddNewComment={onAddNewComment}
-        >
-          {comment.childNodes.map(renderComment)}
-        </Comment>
-      );
-    },
-    [onAddNewComment]
-  );
 
-  const processedComments = useMemo(() => {
-    const processed = createDataTree(comments);
-    return processed.map(renderComment);
-  }, [comments, renderComment]);
+  const processedComments = useMemo(() => createDataTree(comments), [comments]);
 
   return (
     <section className={styles["comments-section"]}>
@@ -69,7 +53,10 @@ function CommentsSection({ postId }: Props) {
           </button>
         </p>
       )}
-      {processedComments}
+      <CommentsTree
+        comments={processedComments}
+        onAddNewComment={onAddNewComment}
+      />
       <AddComment postId={postId} onCommentSubmit={onAddNewComment} />
     </section>
   );
