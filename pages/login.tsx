@@ -1,15 +1,16 @@
-import { useState } from "react";
-
 import InputField from "../src/components/elements/InputField";
 import useAuthentication from "../src/hooks/use-authentication";
 import { useForm } from "../src/hooks/use-form";
 import useRedirect from "../src/hooks/use-redirect";
+import useAsyncFn from "../src/hooks/use-request";
 import { loginUser } from "../src/services/user";
 
 import type { NextPage } from "next";
+
 const Login: NextPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [serverError, serServerError] = useState<string | undefined>(undefined);
+  const [state, makeRequest] = useAsyncFn(loginUser, {
+    onSuccess: (res) => login(res.access_token),
+  });
   const { login, isAuthenticated } = useAuthentication();
   useRedirect({ redirectTo: "/", rule: isAuthenticated });
 
@@ -28,22 +29,7 @@ const Login: NextPage = () => {
         },
       },
     },
-    onSubmit: (values) => {
-      serServerError(undefined);
-      setIsLoading(true);
-      loginUser(values as any)
-        .then((res) => login(res.access_token))
-        .catch((error) => {
-          if (error.message) {
-            serServerError(error.message);
-            return;
-          }
-          serServerError("خطای در اتصال به سرور !");
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    },
+    onSubmit: makeRequest,
     initialValues: {
       username: "",
       password: "",
@@ -52,7 +38,7 @@ const Login: NextPage = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <fieldset disabled={isLoading}>
+      <fieldset disabled={state.loading}>
         <InputField
           value={data.username as string}
           label="نام کاربری"
@@ -69,8 +55,12 @@ const Login: NextPage = () => {
           onChange={handleChange("password")}
           error={errors.password}
         />
-        {serverError && <p className="text-red">{serverError}</p>}
-        <button type="submit" className="btn btn-primary" disabled={isLoading}>
+        {state.error?.[0] && <p className="text-red">{state.error?.[0]}</p>}
+        <button
+          type="submit"
+          className="btn btn-primary"
+          disabled={state.loading}
+        >
           ورود به سیستم
         </button>
       </fieldset>
