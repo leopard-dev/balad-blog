@@ -1,5 +1,10 @@
 import { API_URL } from "../../constants";
-import { GetPostComments, GetPostsResponse, PostNewComment } from "./types";
+import {
+  GetPostComments,
+  GetPostsResponse,
+  PostNewComment,
+  PostNewPost,
+} from "./types";
 
 export const getAllPosts = async (
   query?: string
@@ -51,6 +56,23 @@ export const postComment = async (postId: number, body: PostNewComment) => {
   if (res.ok) {
     return res.json();
   } else {
-    throw new Error("failed to send comment");
+    throw await res.json();
+  }
+};
+
+export const createPost = async (body: PostNewPost, token: string) => {
+  const res = await fetch(`${API_URL}/posts`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+  if (res.ok) {
+    return res.json();
+  } else {
+    throw new Error("failed to create post");
   }
 };
