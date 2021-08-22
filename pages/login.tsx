@@ -1,27 +1,17 @@
+import { useState } from "react";
+
 import InputField from "../src/components/elements/InputField";
+import useAuthentication from "../src/hooks/use-authentication";
+import { useForm } from "../src/hooks/use-form";
+import useRedirect from "../src/hooks/use-redirect";
 import { loginUser } from "../src/services/user";
 
 import type { NextPage } from "next";
-import useLocalStorage from "../src/hooks/use-local-storage";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/dist/client/router";
-import { useForm } from "../src/hooks/use-form";
-
 const Login: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, serServerError] = useState<string | undefined>(undefined);
-  const [token, setToken] = useLocalStorage<undefined | string>(
-    "session_key",
-    undefined
-  );
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (token) {
-      router.replace("/");
-    }
-  }, [token]);
+  const { login, isAuthenticated } = useAuthentication();
+  useRedirect({ redirectTo: "/", rule: !isAuthenticated });
 
   const { handleSubmit, handleChange, data, errors } = useForm({
     validations: {
@@ -42,7 +32,7 @@ const Login: NextPage = () => {
       serServerError(undefined);
       setIsLoading(true);
       loginUser(values as any)
-        .then((res) => setToken(res.access_token))
+        .then((res) => login(res.access_token))
         .catch((error) => {
           if (error.message) {
             serServerError(error.message);
