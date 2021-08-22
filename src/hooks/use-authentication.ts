@@ -19,7 +19,7 @@ function useAuthentication() {
     }
   }, [token]);
 
-  return { isAuthenticated, logout, login };
+  return { isAuthenticated, logout, login, token };
 }
 
 export default useAuthentication;
