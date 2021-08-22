@@ -43,7 +43,7 @@ export const useForm = <T extends Record<keyof T, any> = {}>(options?: {
       for (const key in validations) {
         const value = data[key];
         const validation = validations[key];
-        if (validation?.required?.value && !value) {
+        if (validation?.required?.value && !value.trim()) {
           valid = false;
           newErrors[key] = validation?.required?.message;
         }
