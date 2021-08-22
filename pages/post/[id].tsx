@@ -8,7 +8,7 @@ import { SSRErrorResponse } from "../../src/types";
 
 const BlogPost: NextPage = ({ post, postId, error }: any) => {
   const [isLoading, setIsLoading] = useState(!post);
-  const [isError, setIsError] = useState(!!error);
+  const [isError, setIsError] = useState(Boolean(error));
   const [internalPost, setInternalPost] = useState(post);
 
   const fetchPost = () => {

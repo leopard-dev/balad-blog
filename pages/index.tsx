@@ -13,7 +13,7 @@ type Props = {
 
 const Home: NextPage<Props> = ({ posts, error }) => {
   const [isLoading, setIsLoading] = useState(posts.length === 0);
-  const [isError, setIsError] = useState(!!error);
+  const [isError, setIsError] = useState(Boolean(error));
   const [internalPosts, setInternalPosts] = useState(posts);
 
   const fetchPosts = () => {
