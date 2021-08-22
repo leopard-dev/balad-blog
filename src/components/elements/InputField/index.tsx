@@ -24,25 +24,27 @@ function InputField({
   };
   return (
     <div className={clsx("form-group", styles["input-field-container"])}>
-      <label htmlFor="exampleInputEmail1">{label}</label>
-      {type === "input" && (
-        <input
-          className={clsx("form-control", {
-            "is-invalid": error,
-          })}
-          {...props}
-        />
-      )}
-      {type === "textarea" && (
-        <textarea
-          className={clsx("form-control", {
-            "is-invalid": error,
-          })}
-          style={{ height: 100 }}
-          onKeyUp={resizeTextAreaOnChange}
-          {...props}
-        />
-      )}
+      <label className={styles["input-field-container__label"]}>
+        {label}
+        {type === "input" && (
+          <input
+            className={clsx("form-control", {
+              "is-invalid": error,
+            })}
+            {...props}
+          />
+        )}
+        {type === "textarea" && (
+          <textarea
+            className={clsx("form-control", {
+              "is-invalid": error,
+            })}
+            style={{ height: 100 }}
+            onKeyUp={resizeTextAreaOnChange}
+            {...props}
+          />
+        )}
+      </label>
       <div className="invalid-feedback">{error}</div>
     </div>
   );
