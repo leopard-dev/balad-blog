@@ -14,45 +14,45 @@ const IsUnAuthenticated = createHookLogicalWrapper(
   (ctx) => ctx.isAuthenticated
 );
 
-function SideBar() {
+function Navigation() {
   const { logout } = useAuthentication();
 
   return (
-    <nav className={styles["app-sidebar"]}>
-      <h2 className={styles["app-sidebar__title"]}>لینک های بلاگ</h2>
-      <ul className={styles["app-sidebar__links"]}>
-        <li className={styles["app-sidebar__link-item"]}>
+    <nav className={styles["navigation"]}>
+      <h2 className={styles["navigation__title"]}>لینک های بلاگ</h2>
+      <ul className={styles["navigation__links"]}>
+        <li className={styles["navigation__link-item"]}>
           <Link href="/">
-            <a className={styles["app-sidebar__link"]}>صفحه نخست</a>
+            <a className={styles["navigation__link"]}>صفحه نخست</a>
           </Link>
         </li>
-        <li className={styles["app-sidebar__link-item"]}>
+        <li className={styles["navigation__link-item"]}>
           <Link href="/">
-            <a className={styles["app-sidebar__link"]}>درباره من</a>
+            <a className={styles["navigation__link"]}>درباره من</a>
           </Link>
         </li>
-        <li className={styles["app-sidebar__link-item"]}>
+        <li className={styles["navigation__link-item"]}>
           <Link href="/">
-            <a className={styles["app-sidebar__link"]}>تماس با من</a>
+            <a className={styles["navigation__link"]}>تماس با من</a>
           </Link>
         </li>
         <IsAuthenticated>
-          <li className={styles["app-sidebar__link-item"]}>
+          <li className={styles["navigation__link-item"]}>
             <Link href="/register">
-              <a className={styles["app-sidebar__link"]}>ثبت نام</a>
+              <a className={styles["navigation__link"]}>ثبت نام</a>
             </Link>
           </li>
         </IsAuthenticated>
         <IsAuthenticated>
-          <li className={styles["app-sidebar__link-item"]}>
+          <li className={styles["navigation__link-item"]}>
             <Link href="/login">
-              <a className={styles["app-sidebar__link"]}>ورود به سیستم</a>
+              <a className={styles["navigation__link"]}>ورود به سیستم</a>
             </Link>
           </li>
         </IsAuthenticated>
         <IsUnAuthenticated>
-          <li className={styles["app-sidebar__link-item"]}>
-            <button className={styles["app-sidebar__link"]} onClick={logout}>
+          <li className={styles["navigation__link-item"]}>
+            <button className={styles["navigation__link"]} onClick={logout}>
               خروج
             </button>
           </li>
@@ -62,4 +62,4 @@ function SideBar() {
   );
 }
 
-export default SideBar;
+export default Navigation;
