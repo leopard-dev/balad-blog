@@ -1,5 +1,6 @@
-import { Form, Formik } from "formik";
+import { useState } from "react";
 
+import { useForm } from "../../../hooks/use-form";
 import { createPost } from "../../../services/post";
 import { GetPostsResponse } from "../../../services/post/types";
 import { getLocaleDay } from "../../../utils/date";
@@ -12,50 +13,76 @@ type Props = {
 };
 
 function AddPost({ tokenId, onPostCreated }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverError, serServerError] = useState<string | undefined>(undefined);
+
+  const { handleSubmit, handleChange, data, errors, clearForm } = useForm({
+    validations: {
+      title: {
+        required: {
+          message: "وارد کردن تیتر پست الزامی است.",
+          value: true,
+        },
+      },
+      body: {
+        required: {
+          message: "وارد کردن متن پست الزامی است.",
+          value: true,
+        },
+      },
+    },
+    initialValues: {
+      title: "",
+      body: "",
+    },
+    onSubmit: (values) => {
+      serServerError(undefined);
+      setIsLoading(true);
+      createPost(
+        { ...(values as any), date: getLocaleDay(Date.now()) },
+        tokenId
+      )
+        .then((res) => {
+          clearForm();
+          onPostCreated(res);
+        })
+        .catch((error) => console.log(error))
+        .finally(() => {
+          setIsLoading(false);
+        });
+    },
+  });
   return (
     <section className={styles["add-post"]}>
       <h3 className="h4">اضافه کردن پست جدید</h3>
-      <Formik
-        initialValues={{
-          title: "",
-          body: "",
-        }}
-        validate={(values) => {
-          const errors: any = {};
-          if (!values.title) {
-            errors.title = "وارد کردن تیتر اجباری است.";
-          }
-          if (!values.body) {
-            errors.body = "وارد کردن متن پست اجباری است.";
-          }
-
-          return errors;
-        }}
-        onSubmit={(values, { setSubmitting, setValues }) => {
-          createPost({ ...values, date: getLocaleDay(Date.now()) }, tokenId)
-            .then((res) => {
-              setValues({ body: "", title: "" }, false);
-              onPostCreated(res);
-            })
-            .finally(() => {
-              setSubmitting(false);
-            });
-        }}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <InputField label="تیتر" inputType="input" name="title" />
-            <InputField label="متن پست" inputType="textarea" name="body" />
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isSubmitting}
-            >
-              ثبت پست
-            </button>
-          </Form>
-        )}
-      </Formik>
+      <form onSubmit={handleSubmit}>
+        <fieldset disabled={isLoading}>
+          <InputField
+            label="تیتر"
+            inputType="input"
+            name="title"
+            value={data.title as string}
+            onChange={handleChange("title")}
+            error={errors.title}
+          />
+          <InputField
+            label="متن پست"
+            inputType="textarea"
+            name="body"
+            value={data.body as string}
+            onChange={handleChange("body")}
+            error={errors.body}
+          />
+          {serverError && <p>{serverError}</p>}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={isLoading}
+          >
+            ثبت پست
+          </button>
+        </fieldset>
+      </form>
     </section>
   );
 }
