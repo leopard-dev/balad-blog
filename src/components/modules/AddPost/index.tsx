@@ -1,7 +1,6 @@
-import { useState } from "react";
 import useAuthentication from "../../../hooks/use-authentication";
-
 import { useForm } from "../../../hooks/use-form";
+import useAsyncFn from "../../../hooks/use-request";
 import { createPost } from "../../../services/post";
 import { GetPostsResponse } from "../../../services/post/types";
 import { getLocaleDay } from "../../../utils/date";
@@ -13,9 +12,13 @@ type Props = {
 };
 
 function AddPost({ onPostCreated }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [serverError, serServerError] = useState<string | undefined>(undefined);
   const { token } = useAuthentication();
+  const [state, makeRequest] = useAsyncFn(createPost, {
+    onSuccess: (res) => {
+      clearForm();
+      onPostCreated(res);
+    },
+  });
   const { handleSubmit, handleChange, data, errors, clearForm } = useForm({
     validations: {
       title: {
@@ -35,28 +38,17 @@ function AddPost({ onPostCreated }: Props) {
       title: "",
       body: "",
     },
-    onSubmit: (values) => {
-      serServerError(undefined);
-      setIsLoading(true);
-      createPost(
+    onSubmit: (values) =>
+      makeRequest(
         { ...(values as any), date: getLocaleDay(Date.now()) },
         token as string
-      )
-        .then((res) => {
-          clearForm();
-          onPostCreated(res);
-        })
-        .catch((error) => console.log(error))
-        .finally(() => {
-          setIsLoading(false);
-        });
-    },
+      ),
   });
   return (
     <section className={styles["add-post"]}>
       <h3 className="h4">اضافه کردن پست جدید</h3>
       <form onSubmit={handleSubmit}>
-        <fieldset disabled={isLoading}>
+        <fieldset disabled={state.loading}>
           <InputField
             label="تیتر"
             inputType="input"
@@ -73,11 +65,11 @@ function AddPost({ onPostCreated }: Props) {
             onChange={handleChange("body")}
             error={errors.body}
           />
-          {serverError && <p>{serverError}</p>}
+          {state.error && <p>{state.error[0]}</p>}
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={isLoading}
+            disabled={state.loading}
           >
             ثبت پست
           </button>
