@@ -1,28 +1,22 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import BlogPostListItem from "../src/components/modules/BlogPostListItem";
+import useAsyncFn from "../src/hooks/use-request";
 import { useSearchHistory } from "../src/providers/SearchHistoryProvider";
 import { getAllPosts } from "../src/services/post";
 import { GetPostsResponse } from "../src/services/post/types";
 
 const Search: NextPage = () => {
   const { query } = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [posts, setPosts] = useState<GetPostsResponse[]>([]);
   const { addHistory } = useSearchHistory();
+  const [state, makeRequest] = useAsyncFn(getAllPosts, {});
   const fetchPosts = (query: unknown) => {
     if (typeof query !== "string") {
       return;
     }
-    setIsLoading(true);
-    setIsError(false);
-    getAllPosts(query)
-      .then(setPosts)
-      .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
+    makeRequest(query);
   };
 
   useEffect(() => {
@@ -35,8 +29,8 @@ const Search: NextPage = () => {
   }, [query]);
   return (
     <>
-      {isLoading && <p>لطفا صبر کنید...</p>}
-      {isError && (
+      {state.loading && <p>لطفا صبر کنید...</p>}
+      {state.error && (
         <p>
           خطایی رخ داد
           <button className="btn btn-link" onClick={() => fetchPosts(query.q)}>
@@ -44,7 +38,7 @@ const Search: NextPage = () => {
           </button>
         </p>
       )}
-      {posts.map((post: GetPostsResponse) => (
+      {state.value?.map((post: GetPostsResponse) => (
         <BlogPostListItem key={post.id} {...post} />
       ))}
     </>
