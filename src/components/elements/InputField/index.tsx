@@ -10,12 +10,7 @@ type Props = {
   [key: string]: any;
 };
 
-function InputField({
-  label,
-  inputType: type = "input",
-  error,
-  ...props
-}: Props) {
+function InputField({ label, inputType = "input", error, ...props }: Props) {
   const resizeTextAreaOnChange = (e: any) => {
     if (e.target.scrollHeight > 100) {
       e.target.style.height = e.target.scrollHeight + "px";
@@ -26,7 +21,7 @@ function InputField({
     <div className={clsx("form-group", styles["input-field-container"])}>
       <label className={styles["input-field-container__label"]}>
         {label}
-        {type === "input" && (
+        {inputType === "input" && (
           <input
             className={clsx("form-control", {
               "is-invalid": error,
@@ -34,7 +29,7 @@ function InputField({
             {...props}
           />
         )}
-        {type === "textarea" && (
+        {inputType === "textarea" && (
           <textarea
             className={clsx("form-control", styles["textarea"], {
               "is-invalid": error,
