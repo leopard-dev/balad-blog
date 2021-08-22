@@ -44,8 +44,8 @@ function InputField({
             {...props}
           />
         )}
+        <div className="invalid-feedback">{error}</div>
       </label>
-      <div className="invalid-feedback">{error}</div>
     </div>
   );
 }
