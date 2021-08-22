@@ -19,7 +19,7 @@ export const getAllPosts = async (
   }
   const res = await fetch(url);
   if (!res.ok) {
-    throw new Error("something went wrong");
+    throw await res.json();
   }
   return res.json();
 };
@@ -29,7 +29,7 @@ export const getPostById = async (
 ): Promise<GetPostsResponse> => {
   const res = await fetch(`${API_URL}/posts/${postId}`);
   if (!res.ok) {
-    throw new Error("something went wrong");
+    throw await res.json();
   }
   return res.json();
 };
@@ -39,7 +39,7 @@ export const getPostCommentsById = async (
 ): Promise<GetPostComments[]> => {
   const res = await fetch(`${API_URL}/posts/${postId}/comments`);
   if (!res.ok) {
-    throw new Error("something went wrong");
+    throw await res.json();
   }
   return res.json();
 };
@@ -53,11 +53,10 @@ export const postComment = async (postId: number, body: PostNewComment) => {
     },
     body: JSON.stringify(body),
   });
-  if (res.ok) {
-    return res.json();
-  } else {
+  if (!res.ok) {
     throw await res.json();
   }
+  return res.json();
 };
 
 export const createPost = async (body: PostNewPost, token: string) => {
@@ -70,9 +69,8 @@ export const createPost = async (body: PostNewPost, token: string) => {
     },
     body: JSON.stringify(body),
   });
-  if (res.ok) {
-    return res.json();
-  } else {
-    throw new Error("failed to create post");
+  if (!res.ok) {
+    throw await res.json();
   }
+  return res.json();
 };
