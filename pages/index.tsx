@@ -10,7 +10,7 @@ import createHookLogicalWrapper from "../src/utils/create-hook-logical-wrappe";
 
 const IsAuthenticated = createHookLogicalWrapper(
   useAuthentication,
-  (ctx) => !ctx.isAuthenticated
+  (ctx) => ctx.isAuthenticated
 );
 
 const Home: NextPage = ({ posts, error }: any) => {

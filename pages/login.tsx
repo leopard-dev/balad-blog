@@ -11,7 +11,7 @@ const Login: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, serServerError] = useState<string | undefined>(undefined);
   const { login, isAuthenticated } = useAuthentication();
-  useRedirect({ redirectTo: "/", rule: !isAuthenticated });
+  useRedirect({ redirectTo: "/", rule: isAuthenticated });
 
   const { handleSubmit, handleChange, data, errors } = useForm({
     validations: {
