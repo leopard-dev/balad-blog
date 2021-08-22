@@ -3,35 +3,29 @@ import React, { useEffect, useState } from "react";
 
 import BlogPostListItem from "../../src/components/modules/BlogPostListItem";
 import CommentsSection from "../../src/components/modules/CommentsSection";
+import useAsyncFn from "../../src/hooks/use-request";
 import { getPostById } from "../../src/services/post";
 
 const BlogPost: NextPage = ({ post, postId, error }: any) => {
-  const [isLoading, setIsLoading] = useState(!post);
-  const [isError, setIsError] = useState(!!error);
   const [internalPost, setInternalPost] = useState(post);
 
-  const fetchPost = () => {
-    setIsLoading(true);
-    setIsError(false);
-    getPostById(postId)
-      .then(setInternalPost)
-      .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
-  };
+  const [state, makeRequest] = useAsyncFn(getPostById, {
+    onSuccess: setInternalPost,
+  });
 
   useEffect(() => {
     if (error?.type) {
-      fetchPost();
+      makeRequest(postId);
     }
-  }, [error?.type]);
+  }, []);
 
   return (
     <>
-      {isLoading && <p>لطفا صبر کنید...</p>}
-      {isError && (
+      {state.loading && <p>لطفا صبر کنید...</p>}
+      {state.error && (
         <p>
           خطایی رخ داد
-          <button className="btn btn-link" onClick={fetchPost}>
+          <button className="btn btn-link" onClick={() => makeRequest(postId)}>
             تلاش مجدد
           </button>
         </p>
