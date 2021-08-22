@@ -1,19 +1,20 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
-import React, { useState } from "react";
 
 import InputField from "../src/components/elements/InputField";
 import useAuthentication from "../src/hooks/use-authentication";
 import { useForm } from "../src/hooks/use-form";
 import useRedirect from "../src/hooks/use-redirect";
+import useAsyncFn from "../src/hooks/use-request";
 import { createUser, getUserByUsername } from "../src/services/user";
 
 const Register: NextPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [serverError, serServerError] = useState<string | undefined>(undefined);
   const router = useRouter();
   const { isAuthenticated } = useAuthentication();
   useRedirect({ redirectTo: "/", rule: isAuthenticated });
+  const [state, makeRequest] = useAsyncFn(createUser, {
+    onSuccess: () => router.push("/login"),
+  });
 
   const { handleSubmit, handleChange, data, errors } = useForm({
     validations: {
@@ -82,22 +83,7 @@ const Register: NextPage = () => {
       passwordRepeat: "",
       title: "",
     },
-    onSubmit: (values) => {
-      serServerError(undefined);
-      setIsLoading(true);
-      createUser(values as any)
-        .then((res) => router.push("/login"))
-        .catch((error) => {
-          if (error.message) {
-            serServerError(error.message);
-            return;
-          }
-          serServerError("خطای در اتصال به سرور !");
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    },
+    onSubmit: ({ passwordRepeat, ...values }) => makeRequest(values),
   });
 
   return (
@@ -105,7 +91,7 @@ const Register: NextPage = () => {
       <h2>ثبت نام در سیستم</h2>
 
       <form onSubmit={handleSubmit}>
-        <fieldset disabled={isLoading}>
+        <fieldset disabled={state.loading}>
           <InputField
             value={data.title as string}
             label="نام "
@@ -146,11 +132,11 @@ const Register: NextPage = () => {
             onChange={handleChange("passwordRepeat")}
             error={errors.passwordRepeat}
           />
-          {serverError && <p>{serverError}</p>}
+          {state.error && <p>{state.error[0]}</p>}
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={isLoading}
+            disabled={state.loading}
           >
             ثبت نام
           </button>
