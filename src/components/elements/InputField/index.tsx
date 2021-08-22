@@ -36,11 +36,11 @@ function InputField({
         )}
         {type === "textarea" && (
           <textarea
-            className={clsx("form-control", {
+            className={clsx("form-control", styles["textarea"], {
               "is-invalid": error,
             })}
-            style={{ height: 100 }}
             onKeyUp={resizeTextAreaOnChange}
+            onKeyDown={resizeTextAreaOnChange}
             {...props}
           />
         )}
