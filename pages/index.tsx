@@ -4,8 +4,14 @@ import { useEffect, useState } from "react";
 import BlogPostListItem from "../src/components/modules/BlogPostListItem";
 import { getAllPosts } from "../src/services/post";
 import { GetPostsResponse } from "../src/services/post/types";
+import { SSRErrorResponse } from "../src/types";
 
-const Home: NextPage = ({ posts, error }: any) => {
+type Props = {
+  posts: GetPostsResponse[];
+  error: SSRErrorResponse | null;
+};
+
+const Home: NextPage<Props> = ({ posts, error }) => {
   const [isLoading, setIsLoading] = useState(posts.length === 0);
   const [isError, setIsError] = useState(!!error);
   const [internalPosts, setInternalPosts] = useState(posts);
@@ -44,7 +50,8 @@ const Home: NextPage = ({ posts, error }: any) => {
 
 export async function getServerSideProps() {
   let posts: GetPostsResponse[] = [];
-  let error: any = null;
+  let error: SSRErrorResponse | null = null;
+
   try {
     posts = await getAllPosts();
   } catch (e) {
