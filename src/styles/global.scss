@@ -1,0 +1,93 @@
+body {
+  direction: rtl;
+}
+@import "./variables.scss";
+@import "/node_modules/bootstrap/scss/root";
+@import "/node_modules/bootstrap/scss/reboot";
+@import "/node_modules/bootstrap/scss/type";
+// @import "/node_modules/bootstrap/scss/images";
+// @import "/node_modules/bootstrap/scss/grid";
+// @import "/node_modules/bootstrap/scss/tables";
+// @import "/node_modules/bootstrap/scss/forms";
+@import "/node_modules/bootstrap/scss/buttons";
+// @import "/node_modules/bootstrap/scss/transitions";
+// @import "/node_modules/bootstrap/scss/dropdown";
+// @import "/node_modules/bootstrap/scss/button-group";
+// @import "/node_modules/bootstrap/scss/input-group";
+// @import "/node_modules/bootstrap/scss/custom-forms";
+// @import "/node_modules/bootstrap/scss/nav";
+// @import "/node_modules/bootstrap/scss/navbar";
+// @import "/node_modules/bootstrap/scss/card";
+// @import "/node_modules/bootstrap/scss/breadcrumb";
+// @import "/node_modules/bootstrap/scss/pagination";
+// @import "/node_modules/bootstrap/scss/badge";
+// @import "/node_modules/bootstrap/scss/jumbotron";
+// @import "/node_modules/bootstrap/scss/alert";
+// @import "/node_modules/bootstrap/scss/progress";
+// @import "/node_modules/bootstrap/scss/media";
+// @import "/node_modules/bootstrap/scss/list-group";
+// @import "/node_modules/bootstrap/scss/close";
+// @import "/node_modules/bootstrap/scss/toasts";
+// @import "/node_modules/bootstrap/scss/modal";
+// @import "/node_modules/bootstrap/scss/tooltip";
+// @import "/node_modules/bootstrap/scss/popover";
+// @import "/node_modules/bootstrap/scss/carousel";
+// @import "/node_modules/bootstrap/scss/spinners";
+@import "/node_modules/bootstrap/scss/utilities";
+// @import "/node_modules/bootstrap/scss/print";
+
+// FONT
+
+@font-face {
+  font-family: Samim;
+  src: url("/fonts/Samim.woff") format("woff");
+  font-style: normal;
+}
+
+// BODY
+body {
+  background-color: rgb(237, 237, 238);
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#__next {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
+}
+
+.content,
+.footer {
+  max-width: map-get($map: $container-max-widths, $key: lg);
+  margin: 0 auto;
+}
+
+// CONTENT
+.content {
+  @include media-breakpoint-down(sm) {
+    // Larger than sm: 576px
+    flex-direction: column;
+  }
+  flex: 1 0 auto;
+  display: flex;
+  gap: 40px;
+  width: 100%;
+}
+
+// PAGE CONTAINER
+.page-container {
+  background-color: rgb(241, 241, 241);
+  border-radius: 4px;
+  padding: 20px 10px;
+  flex: 1;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+// footer
+.footer {
+  margin-top: 20px;
+}
