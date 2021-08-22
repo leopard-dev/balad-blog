@@ -1,28 +1,34 @@
-import { useCallback } from "react";
+import { memo } from "react";
+
 import { GetPostComments } from "../../../services/post/types";
 import Comment from "../../elements/Comment";
 
+type CommentProps = {
+  childNodes: CommentProps[];
+} & GetPostComments;
+
 type Props = {
   onAddNewComment: (comment: GetPostComments) => void;
-  comments: GetPostComments[];
+  comments: CommentProps[];
 };
 
 function CommentsTree({ onAddNewComment, comments }: Props) {
-  const renderComment = useCallback(
-    (comment: any) => {
-      return (
+  return (
+    <>
+      {comments.map((comment: CommentProps) => (
         <Comment
           key={comment.id}
-          {...comment}
           onAddNewComment={onAddNewComment}
+          {...comment}
         >
-          {comment.childNodes.map(renderComment)}
+          <CommentsTree
+            onAddNewComment={onAddNewComment}
+            comments={comment.childNodes}
+          />
         </Comment>
-      );
-    },
-    [onAddNewComment]
+      ))}
+    </>
   );
-  return <>{comments.map(renderComment)}</>;
 }
 
-export default CommentsTree;
+export default memo(CommentsTree);
