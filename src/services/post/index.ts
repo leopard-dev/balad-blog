@@ -46,7 +46,7 @@ export const postComment = async (postId: number, body: PostNewComment) => {
   if (res.ok) {
     return res.json();
   } else {
-    throw new Error("failed to send comment");
+    throw await res.json();
   }
 };
 

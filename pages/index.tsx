@@ -6,14 +6,11 @@ import useLocalStorage from "../src/hooks/use-local-storage";
 import { getAllPosts } from "../src/services/post";
 import { GetPostsResponse } from "../src/services/post/types";
 
-const Home: NextPage = ({ posts }: any) => {
+const Home: NextPage = ({ posts, error }: any) => {
   const [isLoading, setIsLoading] = useState(posts.length === 0);
-  const [isError, setIsError] = useState(false);
+  const [isError, setIsError] = useState(!!error);
   const [internalPosts, setInternalPosts] = useState<GetPostsResponse[]>(posts);
-  const [token, setToken] = useLocalStorage<undefined | string>(
-    "session_key",
-    undefined
-  );
+  const [token] = useLocalStorage<undefined | string>("session_key", undefined);
 
   const fetchPosts = () => {
     setIsLoading(true);
@@ -25,7 +22,7 @@ const Home: NextPage = ({ posts }: any) => {
   };
 
   useEffect(() => {
-    if (posts.length === 0) {
+    if (error?.type) {
       fetchPosts();
     }
   }, []);
@@ -57,13 +54,19 @@ const Home: NextPage = ({ posts }: any) => {
 
 export async function getServerSideProps() {
   let posts: GetPostsResponse[] = [];
+  let error: any = null;
   try {
     posts = await getAllPosts();
-  } catch {}
+  } catch (e) {
+    error = {
+      type: "failed_to_fetch",
+    };
+  }
 
   return {
     props: {
       posts,
+      error,
     },
   };
 }

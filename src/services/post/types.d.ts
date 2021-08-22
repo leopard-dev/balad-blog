@@ -20,7 +20,7 @@ export interface GetPostComments {
 export interface PostNewComment {
   author: string;
   date: string;
-  parent_id?: number;
+  parent_id: number | null;
   body: string;
 }
 
