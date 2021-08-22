@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useAuthentication from "../../../hooks/use-authentication";
 
 import { useForm } from "../../../hooks/use-form";
 import { createPost } from "../../../services/post";
@@ -8,14 +9,13 @@ import InputField from "../../elements/InputField";
 import styles from "./styles.module.scss";
 
 type Props = {
-  tokenId: string;
   onPostCreated: (post: GetPostsResponse) => void;
 };
 
-function AddPost({ tokenId, onPostCreated }: Props) {
+function AddPost({ onPostCreated }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, serServerError] = useState<string | undefined>(undefined);
-
+  const { token } = useAuthentication();
   const { handleSubmit, handleChange, data, errors, clearForm } = useForm({
     validations: {
       title: {
@@ -40,7 +40,7 @@ function AddPost({ tokenId, onPostCreated }: Props) {
       setIsLoading(true);
       createPost(
         { ...(values as any), date: getLocaleDay(Date.now()) },
-        tokenId
+        token as string
       )
         .then((res) => {
           clearForm();

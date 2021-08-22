@@ -1,16 +1,22 @@
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
+
 import AddPost from "../src/components/modules/AddPost";
 import BlogPostListItem from "../src/components/modules/BlogPostListItem";
-import useLocalStorage from "../src/hooks/use-local-storage";
+import useAuthentication from "../src/hooks/use-authentication";
 import { getAllPosts } from "../src/services/post";
 import { GetPostsResponse } from "../src/services/post/types";
+import createHookLogicalWrapper from "../src/utils/create-hook-logical-wrappe";
+
+const IsAuthenticated = createHookLogicalWrapper(
+  useAuthentication,
+  (ctx) => !ctx.isAuthenticated
+);
 
 const Home: NextPage = ({ posts, error }: any) => {
   const [isLoading, setIsLoading] = useState(posts.length === 0);
   const [isError, setIsError] = useState(!!error);
   const [internalPosts, setInternalPosts] = useState<GetPostsResponse[]>(posts);
-  const [token] = useLocalStorage<undefined | string>("session_key", undefined);
 
   const fetchPosts = () => {
     setIsLoading(true);
@@ -37,14 +43,13 @@ const Home: NextPage = ({ posts, error }: any) => {
           </button>
         </p>
       )}
-      {token && (
+      <IsAuthenticated>
         <AddPost
           onPostCreated={(newPost) =>
             setInternalPosts((old) => [newPost, ...old])
           }
-          tokenId={token}
         />
-      )}
+      </IsAuthenticated>
       {internalPosts.map((post: GetPostsResponse) => (
         <BlogPostListItem key={post.id} {...post} />
       ))}
