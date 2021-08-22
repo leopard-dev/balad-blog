@@ -61,12 +61,15 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
       },
     });
 
-  const keyDownEventHandler = useCallback((e: any) => {
-    if ((e.metaKey || e.ctrlKey) && e.code === "Enter") {
-      e.preventDefault();
-      submit();
-    }
-  }, []);
+  const keyDownEventHandler = useCallback(
+    (e: any) => {
+      if ((e.metaKey || e.ctrlKey) && e.code === "Enter") {
+        e.preventDefault();
+        submit();
+      }
+    },
+    [submit]
+  );
 
   return (
     <section className={styles["add-comment"]}>
