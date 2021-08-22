@@ -1,12 +1,21 @@
 import Link from "next/link";
-import useLocalStorage from "../../../hooks/use-local-storage";
+
+import useAuthentication from "../../../hooks/use-authentication";
+import createHookLogicalWrapper from "../../../utils/create-hook-logical-wrappe";
 import styles from "./styles.module.scss";
 
+const IsAuthenticated = createHookLogicalWrapper(
+  useAuthentication,
+  (ctx) => !ctx.isAuthenticated
+);
+
+const IsUnAuthenticated = createHookLogicalWrapper(
+  useAuthentication,
+  (ctx) => ctx.isAuthenticated
+);
+
 function SideBar() {
-  const [token, setToken] = useLocalStorage<undefined | string>(
-    "session_key",
-    undefined
-  );
+  const { logout } = useAuthentication();
 
   return (
     <nav className={styles["app-sidebar"]}>
@@ -27,30 +36,27 @@ function SideBar() {
             <a className={styles["app-sidebar__link"]}>تماس با من</a>
           </Link>
         </li>
-        {!token && (
+        <IsAuthenticated>
           <li className={styles["app-sidebar__link-item"]}>
             <Link href="/register">
               <a className={styles["app-sidebar__link"]}>ثبت نام</a>
             </Link>
           </li>
-        )}
-        {!token && (
+        </IsAuthenticated>
+        <IsAuthenticated>
           <li className={styles["app-sidebar__link-item"]}>
             <Link href="/login">
               <a className={styles["app-sidebar__link"]}>ورود به سیستم</a>
             </Link>
           </li>
-        )}
-        {!!token && (
+        </IsAuthenticated>
+        <IsUnAuthenticated>
           <li className={styles["app-sidebar__link-item"]}>
-            <button
-              className={styles["app-sidebar__link"]}
-              onClick={() => setToken(undefined)}
-            >
+            <button className={styles["app-sidebar__link"]} onClick={logout}>
               خروج
             </button>
           </li>
-        )}
+        </IsUnAuthenticated>
       </ul>
     </nav>
   );

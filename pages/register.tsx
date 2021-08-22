@@ -1,24 +1,19 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import InputField from "../src/components/elements/InputField";
+import useAuthentication from "../src/hooks/use-authentication";
 import { useForm } from "../src/hooks/use-form";
-import useLocalStorage from "../src/hooks/use-local-storage";
+import useRedirect from "../src/hooks/use-redirect";
 import { createUser, getUserByUsername } from "../src/services/user";
 
 const Register: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, serServerError] = useState<string | undefined>(undefined);
-  const [token] = useLocalStorage<undefined | string>("session_key", undefined);
-
   const router = useRouter();
-
-  useEffect(() => {
-    if (token) {
-      router.replace("/");
-    }
-  }, [token]);
+  const { isAuthenticated } = useAuthentication();
+  useRedirect({ redirectTo: "/", rule: !isAuthenticated });
 
   const { handleSubmit, handleChange, data, errors } = useForm({
     validations: {
