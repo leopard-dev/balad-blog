@@ -1,7 +1,8 @@
 import clsx from "clsx";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import { useForm } from "../../../hooks/use-form";
+import useNetworkRequest from "../../../hooks/use-request";
 import { postComment } from "../../../services/post";
 import { GetPostComments } from "../../../services/post/types";
 import { getLocaleDay } from "../../../utils/date";
@@ -15,34 +16,21 @@ type Props = {
 };
 
 function AddComment({ postId, parentId, onCommentSubmit }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [requestErrors, setRequestErrors] = useState<string[]>([]);
-
-  const submitComment = useCallback(
-    async (data: any) => {
-      setRequestErrors([]);
-      setIsLoading(true);
-      postComment(postId, {
-        author: data.author,
-        body: data.body,
-        date: getLocaleDay(Date.now()),
-        parent_id: parentId ?? null,
-      })
-        .then((res) => {
-          onCommentSubmit(res);
-          clearForm();
-        })
-        .catch((e) => {
-          if (e.errors) {
-            setRequestErrors(e.errors);
-            return;
-          }
-          setRequestErrors(["خطا در اتصال به سرور"]);
-        })
-        .finally(() => setIsLoading(false));
+  const [state, makeRequest] = useNetworkRequest(postComment, {
+    onSuccess: (res) => {
+      onCommentSubmit(res);
+      clearForm();
     },
-    [parentId, postId]
-  );
+  });
+
+  const submitComment = async (data: any) => {
+    makeRequest(postId, {
+      author: data.author,
+      body: data.body,
+      date: getLocaleDay(Date.now()),
+      parent_id: parentId ?? null,
+    });
+  };
 
   const { handleSubmit, handleChange, data, errors, clearForm, submit } =
     useForm({
@@ -72,7 +60,7 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
     <section className={styles["add-comment"]}>
       <h3 className="h4">اضافه کردن کامنت جدید</h3>
       <form onSubmit={handleSubmit} onKeyDown={keyDownEventHandler}>
-        <fieldset disabled={isLoading}>
+        <fieldset disabled={state.loading}>
           <InputField
             label="نام شما"
             value={data.author}
@@ -86,9 +74,9 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
             inputType="textarea"
             error={errors.body}
           />
-          {requestErrors.length > 0 && (
+          {(state.error?.length ?? 0) > 0 && (
             <ul className={styles["add-comment__error"]}>
-              {requestErrors.map((item) => (
+              {state.error?.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
@@ -101,7 +89,7 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
               styles["add-comment__submit-btn"]
             )}
           >
-            {isLoading ? "لطفا صبر کنید" : "ثبت نظر"}
+            {state.loading ? "لطفا صبر کنید" : "ثبت نظر"}
           </button>
         </fieldset>
       </form>
