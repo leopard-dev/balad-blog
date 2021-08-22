@@ -1,59 +1,65 @@
 import Link from "next/link";
-import useLocalStorage from "../../../hooks/use-local-storage";
+
+import useAuthentication from "../../../hooks/use-authentication";
+import createHookLogicalWrapper from "../../../utils/create-hook-logical-wrappe";
 import styles from "./styles.module.scss";
 
-function Navigation() {
-  const [token, setToken] = useLocalStorage<undefined | string>(
-    "session_key",
-    undefined
-  );
+const IsAuthenticated = createHookLogicalWrapper(
+  useAuthentication,
+  (ctx) => !ctx.isAuthenticated
+);
+
+const IsUnAuthenticated = createHookLogicalWrapper(
+  useAuthentication,
+  (ctx) => ctx.isAuthenticated
+);
+
+function SideBar() {
+  const { logout } = useAuthentication();
 
   return (
-    <nav className={styles["navigation"]}>
-      <h2 className={styles["navigation__title"]}>لینک های بلاگ</h2>
-      <ul className={styles["navigation__links"]}>
-        <li className={styles["navigation__link-item"]}>
+    <nav className={styles["app-sidebar"]}>
+      <h2 className={styles["app-sidebar__title"]}>لینک های بلاگ</h2>
+      <ul className={styles["app-sidebar__links"]}>
+        <li className={styles["app-sidebar__link-item"]}>
           <Link href="/">
-            <a className={styles["navigation__link"]}>صفحه نخست</a>
+            <a className={styles["app-sidebar__link"]}>صفحه نخست</a>
           </Link>
         </li>
-        <li className={styles["navigation__link-item"]}>
+        <li className={styles["app-sidebar__link-item"]}>
           <Link href="/">
-            <a className={styles["navigation__link"]}>درباره من</a>
+            <a className={styles["app-sidebar__link"]}>درباره من</a>
           </Link>
         </li>
-        <li className={styles["navigation__link-item"]}>
+        <li className={styles["app-sidebar__link-item"]}>
           <Link href="/">
-            <a className={styles["navigation__link"]}>تماس با من</a>
+            <a className={styles["app-sidebar__link"]}>تماس با من</a>
           </Link>
         </li>
-        {!token && (
-          <li className={styles["navigation__link-item"]}>
+        <IsAuthenticated>
+          <li className={styles["app-sidebar__link-item"]}>
             <Link href="/register">
-              <a className={styles["navigation__link"]}>ثبت نام</a>
+              <a className={styles["app-sidebar__link"]}>ثبت نام</a>
             </Link>
           </li>
-        )}
-        {!token && (
-          <li className={styles["navigation__link-item"]}>
+        </IsAuthenticated>
+        <IsAuthenticated>
+          <li className={styles["app-sidebar__link-item"]}>
             <Link href="/login">
-              <a className={styles["navigation__link"]}>ورود به سیستم</a>
+              <a className={styles["app-sidebar__link"]}>ورود به سیستم</a>
             </Link>
           </li>
-        )}
-        {!!token && (
-          <li className={styles["navigation__link-item"]}>
-            <button
-              className={styles["navigation__link"]}
-              onClick={() => setToken(undefined)}
-            >
+        </IsAuthenticated>
+        <IsUnAuthenticated>
+          <li className={styles["app-sidebar__link-item"]}>
+            <button className={styles["app-sidebar__link"]} onClick={logout}>
               خروج
             </button>
           </li>
-        )}
+        </IsUnAuthenticated>
       </ul>
     </nav>
   );
 }
 
-export default Navigation;
+export default SideBar;
