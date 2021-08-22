@@ -22,6 +22,7 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
     async (data: any) => {
       setRequestErrors([]);
       setIsLoading(true);
+
       postComment(postId, {
         author: data.author,
         body: data.body,
