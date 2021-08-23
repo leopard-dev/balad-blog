@@ -1,12 +1,13 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import InputField from "../src/components/elements/InputField";
 import useAuthentication from "../src/hooks/use-authentication";
 import { useForm } from "../src/hooks/use-form";
 import useRedirect from "../src/hooks/use-redirect";
 import { createUser, getUserByUsername } from "../src/services/user";
+import debounce from "../src/utils/debounce";
 
 const Register: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +15,20 @@ const Register: NextPage = () => {
   const router = useRouter();
   const { isAuthenticated } = useAuthentication();
   useRedirect({ redirectTo: "/", rule: isAuthenticated });
+
+  // this memorization could be extracted into it's own hook
+  const validateUsername = useMemo(
+    () =>
+      debounce(async (value) => {
+        try {
+          await getUserByUsername(value);
+          return false;
+        } catch {
+          return true;
+        }
+      }),
+    []
+  );
 
   const { handleSubmit, handleChange, data, errors } = useForm({
     validations: {
@@ -42,14 +57,7 @@ const Register: NextPage = () => {
           value: true,
         },
         custom: {
-          isValid: async (value) => {
-            try {
-              await getUserByUsername(value);
-              return false;
-            } catch {
-              return true;
-            }
-          },
+          isValid: validateUsername,
           validateOnChange: true,
           message: "نام کاربری توسط فرد دیگری گرفته شده است.",
         },
@@ -107,7 +115,7 @@ const Register: NextPage = () => {
       <form onSubmit={handleSubmit}>
         <fieldset disabled={isLoading}>
           <InputField
-            value={data.title as string}
+            value={data.title}
             label="نام "
             type="text"
             name="title"
@@ -118,7 +126,7 @@ const Register: NextPage = () => {
             label="نام کاربری "
             type="text"
             name="username"
-            value={data.username as string}
+            value={data.username}
             onChange={handleChange("username")}
             error={errors.username}
           />
@@ -126,7 +134,7 @@ const Register: NextPage = () => {
             label="ایمیل"
             type="email"
             name="email"
-            value={data.email as string}
+            value={data.email}
             onChange={handleChange("email")}
             error={errors.email}
           />
@@ -134,7 +142,7 @@ const Register: NextPage = () => {
             label="کلمه عبور"
             type="password"
             name="password"
-            value={data.password as string}
+            value={data.password}
             onChange={handleChange("password")}
             error={errors.password}
           />
@@ -142,7 +150,7 @@ const Register: NextPage = () => {
             label="تکرار کلمه عبور"
             type="password"
             name="passwordRepeat"
-            value={data.passwordRepeat as string}
+            value={data.passwordRepeat}
             onChange={handleChange("passwordRepeat")}
             error={errors.passwordRepeat}
           />

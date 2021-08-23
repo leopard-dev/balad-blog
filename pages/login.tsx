@@ -54,7 +54,7 @@ const Login: NextPage = () => {
     <form onSubmit={handleSubmit}>
       <fieldset disabled={isLoading}>
         <InputField
-          value={data.username as string}
+          value={data.username}
           label="نام کاربری"
           type="text"
           name="username"
@@ -62,7 +62,7 @@ const Login: NextPage = () => {
           error={errors.username}
         />
         <InputField
-          value={data.password as string}
+          value={data.password}
           label="کلمه عبور"
           type="password"
           name="password"
