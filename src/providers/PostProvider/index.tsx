@@ -1,8 +1,6 @@
 import {
   createContext,
-  Dispatch,
   FC,
-  SetStateAction,
   useCallback,
   useContext,
   useEffect,
@@ -21,7 +19,10 @@ type PostsContextType = {
 };
 
 type Props = {
-  initialPosts: GetPostsResponse[];
+  initialPosts: GetPostsResponse[] | null;
+  error?: {
+    type: string;
+  };
 };
 
 export const PostContext = createContext<PostsContextType>({
@@ -32,11 +33,10 @@ export const PostContext = createContext<PostsContextType>({
   fetchPosts: () => {},
 });
 
-const PostProvider: FC<Props> = ({ children, initialPosts }) => {
-  const [posts, setPosts] = useState<GetPostsResponse[]>(initialPosts);
-  const [isLoading, setIsLoading] = useState(posts.length === 0);
-  const [isError, setIsError] = useState(false);
-
+const PostProvider: FC<Props> = ({ children, initialPosts, error }) => {
+  const [posts, setPosts] = useState<GetPostsResponse[]>(initialPosts ?? []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(Boolean(error));
   const fetchPosts = useCallback(() => {
     setIsLoading(true);
     setIsError(false);
@@ -47,7 +47,7 @@ const PostProvider: FC<Props> = ({ children, initialPosts }) => {
   }, []);
 
   useEffect(() => {
-    if (posts.length === 0) {
+    if (error?.type === "failed_to_fetch_posts") {
       fetchPosts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,10 +64,6 @@ const PostProvider: FC<Props> = ({ children, initialPosts }) => {
       {children}
     </PostContext.Provider>
   );
-};
-
-PostProvider.defaultProps = {
-  initialPosts: [],
 };
 
 export const usePosts = () => useContext(PostContext);

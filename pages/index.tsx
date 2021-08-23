@@ -39,13 +39,13 @@ const Home: NextPage = () => {
 };
 
 export async function getServerSideProps() {
-  let posts: GetPostsResponse[] = [];
+  let posts: GetPostsResponse[] | null = null;
   let error: any = null;
   try {
     posts = await getAllPosts();
   } catch (e) {
     error = {
-      type: "failed_to_fetch",
+      type: "failed_to_fetch_posts",
     };
   }
 

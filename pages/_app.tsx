@@ -9,7 +9,7 @@ import SearchHistoryProvider from "../src/providers/SearchHistoryProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <PostProvider initialPosts={pageProps.posts}>
+    <PostProvider initialPosts={pageProps.posts} error={pageProps.error}>
       <SearchHistoryProvider>
         <Header />
         <div className="content">
