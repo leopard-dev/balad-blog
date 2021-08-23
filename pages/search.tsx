@@ -13,6 +13,7 @@ const Search: NextPage = () => {
   const [isError, setIsError] = useState(false);
   const [posts, setPosts] = useState<GetPostsResponse[]>([]);
   const { addHistory } = useSearchHistory();
+
   const fetchPosts = (query: unknown) => {
     if (typeof query !== "string") {
       return;
@@ -33,6 +34,7 @@ const Search: NextPage = () => {
     addHistory(query.q);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
   return (
     <>
       {isLoading && <p>لطفا صبر کنید...</p>}
