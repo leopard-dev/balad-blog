@@ -13,7 +13,6 @@
     "bootstrap": "^5.1.0",
     "clsx": "^1.1.1",
     "dayjs": "^1.10.6",
-    "formik": "^2.2.9",
     "highlight-words-core": "^1.2.2",
     "html-react-parser": "^1.2.8",
     "jalaliday": "^2.3.0",

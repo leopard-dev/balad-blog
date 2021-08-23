@@ -47,7 +47,7 @@ function Search() {
   });
 
   return (
-    <section className="search-container">
+    <section className={styles["search-container"]}>
       <h2 className={styles["search-container__title"]}>جست و جو در سایت</h2>
 
       <form onSubmit={handleSubmit}>
