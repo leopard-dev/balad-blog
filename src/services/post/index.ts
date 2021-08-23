@@ -8,30 +8,30 @@ import {
 
 export const getAllPosts = async (): Promise<GetPostsResponse[]> => {
   const res = await fetch(`${API_URL}/posts`);
-  if (!res.ok) {
-    throw new Error("something went wrong");
+  if (res.ok) {
+    return res.json();
   }
-  return res.json();
+  throw await res.json();
 };
 
 export const getPostById = async (
   postId: number
 ): Promise<GetPostsResponse> => {
   const res = await fetch(`${API_URL}/posts/${postId}`);
-  if (!res.ok) {
-    throw new Error("something went wrong");
+  if (res.ok) {
+    return res.json();
   }
-  return res.json();
+  throw await res.json();
 };
 
 export const getPostCommentsById = async (
   postId: number
 ): Promise<GetPostComments[]> => {
   const res = await fetch(`${API_URL}/posts/${postId}/comments`);
-  if (!res.ok) {
-    throw new Error("something went wrong");
+  if (res.ok) {
+    return res.json();
   }
-  return res.json();
+  throw await res.json();
 };
 
 export const postComment = async (postId: number, body: PostNewComment) => {
@@ -45,9 +45,8 @@ export const postComment = async (postId: number, body: PostNewComment) => {
   });
   if (res.ok) {
     return res.json();
-  } else {
-    throw await res.json();
   }
+  throw await res.json();
 };
 
 export const createPost = async (body: PostNewPost, token: string) => {
@@ -62,7 +61,6 @@ export const createPost = async (body: PostNewPost, token: string) => {
   });
   if (res.ok) {
     return res.json();
-  } else {
-    throw new Error("failed to create post");
   }
+  throw await res.json();
 };
