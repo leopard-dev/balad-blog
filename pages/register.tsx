@@ -13,7 +13,7 @@ const Register: NextPage = () => {
   const [serverError, serServerError] = useState<string | undefined>(undefined);
   const router = useRouter();
   const { isAuthenticated } = useAuthentication();
-  useRedirect({ redirectTo: "/", rule: !isAuthenticated });
+  useRedirect({ redirectTo: "/", rule: isAuthenticated });
 
   const { handleSubmit, handleChange, data, errors } = useForm({
     validations: {
