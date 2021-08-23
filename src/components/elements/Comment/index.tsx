@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import React, { useState } from "react";
+
 import { GetPostComments } from "../../../services/post/types";
 import AddComment from "../../modules/AddComment";
 import styles from "./styles.module.scss";
@@ -47,7 +48,10 @@ function Comment({
           postId={post_id}
         />
       ) : (
-        <button onClick={() => setIsReplying(true)} className="btn btn-secondary">
+        <button
+          onClick={() => setIsReplying(true)}
+          className="btn btn-secondary"
+        >
           پاسخ به این نظر
         </button>
       )}
