@@ -51,6 +51,10 @@ const PostProvider: React.FC<Props> = ({ children, initialPosts }) => {
   );
 };
 
+PostProvider.defaultProps = {
+  initialPosts: [],
+};
+
 export const usePosts = () => React.useContext(PostContext);
 
 export default PostProvider;
