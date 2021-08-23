@@ -1,4 +1,12 @@
-import * as React from "react";
+import {
+  createContext,
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
 import { getAllPosts } from "../../services/post";
 import { GetPostsResponse } from "../../services/post/types";
 
@@ -6,28 +14,30 @@ type PostsContextType = {
   posts: GetPostsResponse[];
   isLoading: boolean;
   isError: boolean;
-  setPosts: React.Dispatch<React.SetStateAction<GetPostsResponse[]>>;
+  onPostCreated: (newPost: GetPostsResponse) => void;
   fetchPosts: () => void;
 };
 
 type Props = {
-  initialPosts: GetPostsResponse[];
+  initialPosts: GetPostsResponse[] | null;
+  error?: {
+    type: string;
+  };
 };
 
-export const PostContext = React.createContext<PostsContextType>({
+export const PostContext = createContext<PostsContextType>({
   posts: [],
   isLoading: false,
   isError: false,
-  setPosts: () => {},
+  onPostCreated: () => {},
   fetchPosts: () => {},
 });
 
-const PostProvider: React.FC<Props> = ({ children, initialPosts }) => {
-  const [posts, setPosts] = React.useState<GetPostsResponse[]>(initialPosts);
-  const [isLoading, setIsLoading] = React.useState(posts.length === 0);
-  const [isError, setIsError] = React.useState(false);
-
-  const fetchPosts = React.useCallback(() => {
+const PostProvider: FC<Props> = ({ children, initialPosts, error }) => {
+  const [posts, setPosts] = useState<GetPostsResponse[]>(initialPosts ?? []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(Boolean(error));
+  const fetchPosts = useCallback(() => {
     setIsLoading(true);
     setIsError(false);
     getAllPosts()
@@ -36,21 +46,26 @@ const PostProvider: React.FC<Props> = ({ children, initialPosts }) => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  React.useEffect(() => {
-    if (posts.length === 0) {
+  useEffect(() => {
+    if (error?.type === "failed_to_fetch_posts") {
       fetchPosts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const onPostCreated = useCallback(
+    (newPost: GetPostsResponse) => setPosts((old) => [newPost, ...old]),
+    []
+  );
   return (
     <PostContext.Provider
-      value={{ posts, setPosts, isLoading, isError, fetchPosts }}
+      value={{ posts, onPostCreated, isLoading, isError, fetchPosts }}
     >
       {children}
     </PostContext.Provider>
   );
 };
 
-export const usePosts = () => React.useContext(PostContext);
+export const usePosts = () => useContext(PostContext);
 
 export default PostProvider;

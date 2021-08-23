@@ -18,30 +18,30 @@ export const getAllPosts = async (
       });
   }
   const res = await fetch(url);
-  if (!res.ok) {
-    throw await res.json();
+  if (res.ok) {
+    return res.json();
   }
-  return res.json();
+  throw await res.json();
 };
 
 export const getPostById = async (
   postId: number
 ): Promise<GetPostsResponse> => {
   const res = await fetch(`${API_URL}/posts/${postId}`);
-  if (!res.ok) {
-    throw await res.json();
+  if (res.ok) {
+    return res.json();
   }
-  return res.json();
+  throw await res.json();
 };
 
 export const getPostCommentsById = async (
   postId: number
 ): Promise<GetPostComments[]> => {
   const res = await fetch(`${API_URL}/posts/${postId}/comments`);
-  if (!res.ok) {
-    throw await res.json();
+  if (res.ok) {
+    return res.json();
   }
-  return res.json();
+  throw await res.json();
 };
 
 export const postComment = async (postId: number, body: PostNewComment) => {
@@ -53,10 +53,10 @@ export const postComment = async (postId: number, body: PostNewComment) => {
     },
     body: JSON.stringify(body),
   });
-  if (!res.ok) {
-    throw await res.json();
+  if (res.ok) {
+    return res.json();
   }
-  return res.json();
+  throw await res.json();
 };
 
 export const createPost = async (body: PostNewPost, token: string) => {
@@ -69,8 +69,8 @@ export const createPost = async (body: PostNewPost, token: string) => {
     },
     body: JSON.stringify(body),
   });
-  if (!res.ok) {
-    throw await res.json();
+  if (res.ok) {
+    return res.json();
   }
-  return res.json();
+  throw await res.json();
 };

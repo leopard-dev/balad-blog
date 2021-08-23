@@ -12,6 +12,7 @@ const Search: NextPage = () => {
   const { query } = useRouter();
   const { addHistory } = useSearchHistory();
   const [state, makeRequest] = useAsyncFn(getAllPosts, {});
+
   const fetchPosts = (query: unknown) => {
     if (typeof query !== "string") {
       return;
@@ -27,6 +28,7 @@ const Search: NextPage = () => {
     addHistory(query.q);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
   return (
     <>
       {state.loading && <p>لطفا صبر کنید...</p>}

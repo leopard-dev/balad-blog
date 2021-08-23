@@ -1,17 +1,18 @@
 import useAuthentication from "../../../hooks/use-authentication";
 import { useForm } from "../../../hooks/use-form";
 import useAsyncFn from "../../../hooks/use-request";
+import { useState } from "react";
+
+import { usePosts } from "../../../providers/PostProvider";
 import { createPost } from "../../../services/post";
-import { GetPostsResponse } from "../../../services/post/types";
 import { getLocaleDay } from "../../../utils/date";
 import InputField from "../../elements/InputField";
 import styles from "./styles.module.scss";
 
-type Props = {
-  onPostCreated: (post: GetPostsResponse) => void;
-};
+type Props = {};
 
-function AddPost({ onPostCreated }: Props) {
+function AddPost() {
+  const { onPostCreated } = usePosts();
   const { token } = useAuthentication();
   const [state, makeRequest] = useAsyncFn(createPost, {
     onSuccess: (res) => {
@@ -54,7 +55,7 @@ function AddPost({ onPostCreated }: Props) {
             label="تیتر"
             inputType="input"
             name="title"
-            value={data.title as string}
+            value={data.title}
             onChange={handleChange("title")}
             error={errors.title}
           />
@@ -62,7 +63,7 @@ function AddPost({ onPostCreated }: Props) {
             label="متن پست"
             inputType="textarea"
             name="body"
-            value={data.body as string}
+            value={data.body}
             onChange={handleChange("body")}
             error={errors.body}
           />
