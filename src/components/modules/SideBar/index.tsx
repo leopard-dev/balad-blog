@@ -4,12 +4,12 @@ import useAuthentication from "../../../hooks/use-authentication";
 import createHookLogicalWrapper from "../../../utils/create-hook-logical-wrappe";
 import styles from "./styles.module.scss";
 
-const IsAuthenticated = createHookLogicalWrapper(
+const WhileUnAuthenticated = createHookLogicalWrapper(
   useAuthentication,
   (ctx) => !ctx.isAuthenticated
 );
 
-const IsUnAuthenticated = createHookLogicalWrapper(
+const WhileAuthenticated = createHookLogicalWrapper(
   useAuthentication,
   (ctx) => ctx.isAuthenticated
 );
@@ -36,27 +36,25 @@ function SideBar() {
             <a className={styles["app-sidebar__link"]}>تماس با من</a>
           </Link>
         </li>
-        <IsAuthenticated>
+        <WhileUnAuthenticated>
           <li className={styles["app-sidebar__link-item"]}>
             <Link href="/register">
               <a className={styles["app-sidebar__link"]}>ثبت نام</a>
             </Link>
           </li>
-        </IsAuthenticated>
-        <IsAuthenticated>
           <li className={styles["app-sidebar__link-item"]}>
             <Link href="/login">
               <a className={styles["app-sidebar__link"]}>ورود به سیستم</a>
             </Link>
           </li>
-        </IsAuthenticated>
-        <IsUnAuthenticated>
+        </WhileUnAuthenticated>
+        <WhileAuthenticated>
           <li className={styles["app-sidebar__link-item"]}>
             <button className={styles["app-sidebar__link"]} onClick={logout}>
               خروج
             </button>
           </li>
-        </IsUnAuthenticated>
+        </WhileAuthenticated>
       </ul>
     </nav>
   );
