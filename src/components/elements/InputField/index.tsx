@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import AutoResizableTextArea from "../AutoResizableTextArea";
 import styles from "./styles.module.scss";
 
 type Props = {
@@ -11,12 +12,6 @@ type Props = {
 };
 
 function InputField({ label, inputType = "input", error, ...props }: Props) {
-  const resizeTextAreaOnChange = (e: any) => {
-    if (e.target.scrollHeight > 100) {
-      e.target.style.height = e.target.scrollHeight + "px";
-    }
-    e.target.style.overflow = "hidden";
-  };
   return (
     <div className={clsx("form-group", styles["input-field-container"])}>
       <label className={styles["input-field-container__label"]}>
@@ -30,14 +25,7 @@ function InputField({ label, inputType = "input", error, ...props }: Props) {
           />
         )}
         {inputType === "textarea" && (
-          <textarea
-            className={clsx("form-control", styles["textarea"], {
-              "is-invalid": error,
-            })}
-            onKeyUp={resizeTextAreaOnChange}
-            onKeyDown={resizeTextAreaOnChange}
-            {...props}
-          />
+          <AutoResizableTextArea error={error} {...props} />
         )}
         <div className="invalid-feedback">{error}</div>
       </label>
