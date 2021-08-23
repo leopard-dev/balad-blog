@@ -16,6 +16,7 @@ function AddPost({ onPostCreated }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, serServerError] = useState<string | undefined>(undefined);
   const { token } = useAuthentication();
+
   const { handleSubmit, handleChange, data, errors, clearForm } = useForm({
     validations: {
       title: {
@@ -52,6 +53,7 @@ function AddPost({ onPostCreated }: Props) {
         });
     },
   });
+
   return (
     <section className={styles["add-post"]}>
       <h3 className="h4">اضافه کردن پست جدید</h3>
