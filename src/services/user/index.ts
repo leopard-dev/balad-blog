@@ -13,7 +13,7 @@ export const getUserByUsername = async (
   if (!res.ok) {
     throw new Error("something went wrong");
   }
-  return res.json();
+  throw await res.json();
 };
 
 export const createUser = async (payload: PostCreateUserPayload) => {
@@ -28,7 +28,7 @@ export const createUser = async (payload: PostCreateUserPayload) => {
   if (res.ok) {
     return res.json();
   } else {
-    throw new Error("failed to create user");
+    throw await res.json();
   }
 };
 
@@ -46,6 +46,6 @@ export const loginUser = async (
   if (res.ok) {
     return res.json();
   } else {
-    throw res.json();
+    throw await res.json();
   }
 };
