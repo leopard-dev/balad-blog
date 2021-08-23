@@ -1,12 +1,13 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import InputField from "../src/components/elements/InputField";
 import useAuthentication from "../src/hooks/use-authentication";
 import { useForm } from "../src/hooks/use-form";
 import useRedirect from "../src/hooks/use-redirect";
 import { createUser, getUserByUsername } from "../src/services/user";
+import debounce from "../src/utils/debounce";
 
 const Register: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +15,20 @@ const Register: NextPage = () => {
   const router = useRouter();
   const { isAuthenticated } = useAuthentication();
   useRedirect({ redirectTo: "/", rule: isAuthenticated });
+
+  // this memorization could be extracted into it's own hook
+  const validateUsername = useMemo(
+    () =>
+      debounce(async (value) => {
+        try {
+          await getUserByUsername(value);
+          return false;
+        } catch {
+          return true;
+        }
+      }),
+    []
+  );
 
   const { handleSubmit, handleChange, data, errors } = useForm({
     validations: {
@@ -42,14 +57,7 @@ const Register: NextPage = () => {
           value: true,
         },
         custom: {
-          isValid: async (value) => {
-            try {
-              await getUserByUsername(value);
-              return false;
-            } catch {
-              return true;
-            }
-          },
+          isValid: validateUsername,
           validateOnChange: true,
           message: "نام کاربری توسط فرد دیگری گرفته شده است.",
         },
