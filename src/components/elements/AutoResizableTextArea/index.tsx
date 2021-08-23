@@ -8,19 +8,13 @@ type Props = {
 };
 
 function AutoResizableTextArea({ error, ...props }: Props) {
-  const resizeTextAreaOnChange = (e: any) => {
-    if (e.target.scrollHeight > 100) {
-      e.target.style.height = e.target.scrollHeight + "px";
-    }
-    e.target.style.overflow = "hidden";
-  };
   return (
-    <textarea
+    <span
+      role="textbox"
+      contentEditable
       className={clsx("form-control", styles["textarea"], {
         "is-invalid": error,
       })}
-      onKeyUp={resizeTextAreaOnChange}
-      onKeyDown={resizeTextAreaOnChange}
       {...props}
     />
   );
