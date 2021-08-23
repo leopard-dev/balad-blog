@@ -15,9 +15,7 @@ const IsAuthenticated = createHookLogicalWrapper(
 );
 
 const Home: NextPage = () => {
-  const { isError, isLoading, posts, fetchPosts, setPosts } = usePosts();
-  const onPostCreated = (newPost: GetPostsResponse) =>
-    setPosts((old) => [newPost, ...old]);
+  const { isError, isLoading, posts, fetchPosts } = usePosts();
   return (
     <>
       {isLoading && <p>لطفا صبر کنید...</p>}
@@ -30,7 +28,7 @@ const Home: NextPage = () => {
         </p>
       )}
       <IsAuthenticated>
-        <AddPost onPostCreated={onPostCreated} />
+        <AddPost />
       </IsAuthenticated>
 
       {posts.map((post: GetPostsResponse) => (

@@ -1,20 +1,17 @@
 import { useState } from "react";
-import useAuthentication from "../../../hooks/use-authentication";
 
+import useAuthentication from "../../../hooks/use-authentication";
 import { useForm } from "../../../hooks/use-form";
+import { usePosts } from "../../../providers/PostProvider";
 import { createPost } from "../../../services/post";
-import { GetPostsResponse } from "../../../services/post/types";
 import { getLocaleDay } from "../../../utils/date";
 import InputField from "../../elements/InputField";
 import styles from "./styles.module.scss";
 
-type Props = {
-  onPostCreated: (post: GetPostsResponse) => void;
-};
-
-function AddPost({ onPostCreated }: Props) {
+function AddPost() {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, serServerError] = useState<string | undefined>(undefined);
+  const { onPostCreated } = usePosts();
   const { token } = useAuthentication();
   const { handleSubmit, handleChange, data, errors, clearForm } = useForm({
     validations: {
