@@ -44,6 +44,7 @@ function AddPost({ onPostCreated }: Props) {
         token as string
       ),
   });
+
   return (
     <section className={styles["add-post"]}>
       <h3 className="h4">اضافه کردن پست جدید</h3>
