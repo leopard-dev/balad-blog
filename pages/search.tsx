@@ -39,7 +39,11 @@ const Search: NextPage = () => {
         </p>
       )}
       {state.value?.map((post: GetPostsResponse) => (
-        <BlogPostListItem key={post.id} {...post} />
+        <BlogPostListItem
+          key={post.id}
+          {...post}
+          search={[query.q as string]}
+        />
       ))}
     </>
   );
