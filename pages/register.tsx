@@ -115,7 +115,7 @@ const Register: NextPage = () => {
       <form onSubmit={handleSubmit}>
         <fieldset disabled={isLoading}>
           <InputField
-            value={data.title as string}
+            value={data.title}
             label="نام "
             type="text"
             name="title"
@@ -126,7 +126,7 @@ const Register: NextPage = () => {
             label="نام کاربری "
             type="text"
             name="username"
-            value={data.username as string}
+            value={data.username}
             onChange={handleChange("username")}
             error={errors.username}
           />
@@ -134,7 +134,7 @@ const Register: NextPage = () => {
             label="ایمیل"
             type="email"
             name="email"
-            value={data.email as string}
+            value={data.email}
             onChange={handleChange("email")}
             error={errors.email}
           />
@@ -142,7 +142,7 @@ const Register: NextPage = () => {
             label="کلمه عبور"
             type="password"
             name="password"
-            value={data.password as string}
+            value={data.password}
             onChange={handleChange("password")}
             error={errors.password}
           />
@@ -150,7 +150,7 @@ const Register: NextPage = () => {
             label="تکرار کلمه عبور"
             type="password"
             name="passwordRepeat"
-            value={data.passwordRepeat as string}
+            value={data.passwordRepeat}
             onChange={handleChange("passwordRepeat")}
             error={errors.passwordRepeat}
           />

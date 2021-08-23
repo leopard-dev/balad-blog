@@ -61,7 +61,7 @@ function AddPost({ onPostCreated }: Props) {
             label="تیتر"
             inputType="input"
             name="title"
-            value={data.title as string}
+            value={data.title}
             onChange={handleChange("title")}
             error={errors.title}
           />
@@ -69,7 +69,7 @@ function AddPost({ onPostCreated }: Props) {
             label="متن پست"
             inputType="textarea"
             name="body"
-            value={data.body as string}
+            value={data.body}
             onChange={handleChange("body")}
             error={errors.body}
           />
