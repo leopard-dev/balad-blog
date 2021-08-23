@@ -1,6 +1,7 @@
-import { GetPostsResponse } from "../../../services/post/types";
-import Link from "next/link";
 import parse from "html-react-parser";
+import Link from "next/link";
+
+import { GetPostsResponse } from "../../../services/post/types";
 import styles from "./styles.module.scss";
 
 type Props = {
