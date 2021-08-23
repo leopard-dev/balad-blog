@@ -1,12 +1,23 @@
 import type { NextPage } from "next";
+import React from "react";
+import AddPost from "../src/components/modules/AddPost";
 
 import BlogPostListItem from "../src/components/modules/BlogPostListItem";
+import useAuthentication from "../src/hooks/use-authentication";
 import { usePosts } from "../src/providers/PostProvider";
 import { getAllPosts } from "../src/services/post";
 import { GetPostsResponse } from "../src/services/post/types";
+import createHookLogicalWrapper from "../src/utils/create-hook-logical-wrappe";
+
+const IsAuthenticated = createHookLogicalWrapper(
+  useAuthentication,
+  (ctx) => ctx.isAuthenticated
+);
 
 const Home: NextPage = () => {
-  const { isError, isLoading, posts, fetchPosts } = usePosts();
+  const { isError, isLoading, posts, fetchPosts, setPosts } = usePosts();
+  const onPostCreated = (newPost: GetPostsResponse) =>
+    setPosts((old) => [newPost, ...old]);
   return (
     <>
       {isLoading && <p>لطفا صبر کنید...</p>}
@@ -18,6 +29,10 @@ const Home: NextPage = () => {
           </button>
         </p>
       )}
+      <IsAuthenticated>
+        <AddPost onPostCreated={onPostCreated} />
+      </IsAuthenticated>
+
       {posts.map((post: GetPostsResponse) => (
         <BlogPostListItem key={post.id} {...post} />
       ))}
@@ -27,13 +42,19 @@ const Home: NextPage = () => {
 
 export async function getServerSideProps() {
   let posts: GetPostsResponse[] = [];
+  let error: any = null;
   try {
     posts = await getAllPosts();
-  } catch {}
+  } catch (e) {
+    error = {
+      type: "failed_to_fetch",
+    };
+  }
 
   return {
     props: {
       posts,
+      error,
     },
   };
 }

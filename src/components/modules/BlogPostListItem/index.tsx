@@ -1,6 +1,7 @@
-import { GetPostsResponse } from "../../../services/post/types";
-import Link from "next/link";
 import parse from "html-react-parser";
+import Link from "next/link";
+
+import { GetPostsResponse } from "../../../services/post/types";
 import styles from "./styles.module.scss";
 import highlightText from "../../../utils/highlighter";
 
@@ -32,7 +33,7 @@ function BlogPostListItem({
       <p className={styles["blog-post__sub-title"]}>
         ارسال شده توسط {author} در تاریخ {date}
       </p>
-      <div className="blog-post__content">
+      <div className={styles["blog-post__content"]}>
         {parse(highlightText(body, search))}
       </div>
       {children}

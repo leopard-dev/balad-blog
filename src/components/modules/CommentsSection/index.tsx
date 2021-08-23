@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+
 import { getPostCommentsById } from "../../../services/post";
 import { GetPostComments } from "../../../services/post/types";
 import { createDataTree } from "../../../utils/create-data-tree";
-import Comment from "../../elements/Comment";
 import AddComment from "../AddComment";
+import CommentsTree from "../CommentsTree";
 import styles from "./styles.module.scss";
 
 type Props = {
@@ -14,9 +15,6 @@ function CommentsSection({ postId }: Props) {
   const [comments, setComments] = useState<GetPostComments[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const onAddNewComment = (newComment: GetPostComments) => {
-    setComments((old) => [...old, newComment]);
-  };
 
   const fetchComments = useCallback((pId: number) => {
     setIsLoading(true);
@@ -31,17 +29,12 @@ function CommentsSection({ postId }: Props) {
     fetchComments(postId);
   }, [fetchComments, postId]);
 
-  const processedComments = useMemo(() => {
-    const processed = createDataTree(comments);
-    const renderComment = (comment: any) => {
-      return (
-        <Comment key={comment.id} {...comment} onAddNewComment={onAddNewComment}>
-          {comment.childNodes.map(renderComment)}
-        </Comment>
-      );
-    };
-    return processed.map(renderComment);
-  }, [comments]);
+  const onAddNewComment = useCallback(
+    (newComment: GetPostComments) => setComments((old) => [...old, newComment]),
+    []
+  );
+
+  const processedComments = useMemo(() => createDataTree(comments), [comments]);
 
   return (
     <section className={styles["comments-section"]}>
@@ -60,7 +53,10 @@ function CommentsSection({ postId }: Props) {
           </button>
         </p>
       )}
-      {processedComments}
+      <CommentsTree
+        comments={processedComments}
+        onAddNewComment={onAddNewComment}
+      />
       <AddComment postId={postId} onCommentSubmit={onAddNewComment} />
     </section>
   );
