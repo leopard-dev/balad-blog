@@ -1,5 +1,5 @@
 {
-  "extends": ["next/core-web-vitals", "airbnb"],
+  "extends": ["next/core-web-vitals", "airbnb", "prettier"],
   "rules": {
     "import/extensions": [
       "error",
