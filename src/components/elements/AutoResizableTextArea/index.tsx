@@ -26,6 +26,7 @@ const AutoResizableTextArea = ({ error, ...props }: Props) => {
       style={{
         height: 'auto',
         minHeight: '100px',
+        ...(props.style ?? {}),
       }}
       onChange={onChangeHandler}
     />
