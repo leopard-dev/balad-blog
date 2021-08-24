@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import clsx from 'clsx';
 import { ChangeEvent, TextareaHTMLAttributes } from 'react';
 

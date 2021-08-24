@@ -14,13 +14,13 @@ const Search: NextPage = () => {
   const [posts, setPosts] = useState<GetPostsResponse[]>([]);
   const { addHistory } = useSearchHistory();
 
-  const fetchPosts = (query: unknown) => {
-    if (typeof query !== 'string') {
+  const fetchPosts = (searchQuery: unknown) => {
+    if (typeof searchQuery !== 'string') {
       return;
     }
     setIsLoading(true);
     setIsError(false);
-    getAllPosts(query)
+    getAllPosts(searchQuery)
       .then(setPosts)
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
@@ -41,7 +41,11 @@ const Search: NextPage = () => {
       {isError && (
         <p>
           خطایی رخ داد
-          <button className="btn btn-link" onClick={() => fetchPosts(query.q)}>
+          <button
+            type="button"
+            className="btn btn-link"
+            onClick={() => fetchPosts(query.q)}
+          >
             تلاش مجدد
           </button>
         </p>
@@ -57,6 +61,7 @@ export async function getServerSideProps() {
   let posts: GetPostsResponse[] = [];
   try {
     posts = await getAllPosts();
+    // eslint-disable-next-line no-empty
   } catch {}
 
   return {

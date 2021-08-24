@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/dist/client/router';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import InputField from '../src/components/elements/InputField';
 import useAuthentication from '../src/hooks/use-authentication';
@@ -18,20 +18,19 @@ const Register: NextPage = () => {
 
   // this memorization could be extracted into it's own hook
   const validateUsername = useMemo(
-    () => debounce(async (value) => {
-      try {
-        await getUserByUsername(value);
-        return false;
-      } catch {
-        return true;
-      }
-    }),
+    () =>
+      debounce(async (value) => {
+        try {
+          await getUserByUsername(value);
+          return false;
+        } catch {
+          return true;
+        }
+      }),
     [],
   );
 
-  const {
-    handleSubmit, handleChange, data, errors,
-  } = useForm({
+  const { handleSubmit, handleChange, data, errors } = useForm({
     validations: {
       email: {
         required: {
@@ -67,7 +66,7 @@ const Register: NextPage = () => {
           value: true,
         },
         custom: {
-          isValid: (value, data) => value === data.password,
+          isValid: (value, enteredData) => value === enteredData.password,
           validateOnChange: true,
 
           message: 'کلمه عبور و تکرار آن با هم برابر نیستند.',
@@ -91,7 +90,7 @@ const Register: NextPage = () => {
       serServerError(undefined);
       setIsLoading(true);
       createUser(values as any)
-        .then((res) => router.push('/login'))
+        .then(() => router.push('/login'))
         .catch((error) => {
           if (error.message) {
             serServerError(error.message);
