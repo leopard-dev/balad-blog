@@ -1,10 +1,5 @@
 import clsx from "clsx";
-import React, {
-  TextareaHTMLAttributes,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { TextareaHTMLAttributes, useRef } from "react";
 
 import styles from "./styles.module.scss";
 
@@ -13,18 +8,9 @@ type Props = {
 } & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const AutoResizableTextArea = ({ error, ...props }: Props) => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [text, setText] = useState("");
-  const [textAreaHeight, setTextAreaHeight] = useState("auto");
-
-  useEffect(() => {
-    setTextAreaHeight(`${textAreaRef.current!.scrollHeight}px`);
-  }, [text]);
-
   const onChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextAreaHeight("auto");
-    setText(event.target.value);
-
+    event.target!.style.height = "auto";
+    event.target!.style.height = `${event.target!.scrollHeight}px`;
     if (props.onChange) {
       props.onChange(event);
     }
@@ -32,14 +18,13 @@ const AutoResizableTextArea = ({ error, ...props }: Props) => {
 
   return (
     <textarea
-      className={clsx("form-control", styles["textarea"], {
+      {...props}
+      className={clsx("form-control", styles["textarea"], props.className, {
         "is-invalid": error,
       })}
-      {...props}
-      ref={textAreaRef}
-      rows={1}
       style={{
-        height: textAreaHeight,
+        height: "auto",
+        minHeight: "100px",
       }}
       onChange={onChangeHandler}
     />
