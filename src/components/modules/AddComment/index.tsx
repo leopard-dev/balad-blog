@@ -45,6 +45,7 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
         })
         .finally(() => setIsLoading(false));
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [parentId, postId],
   );
 

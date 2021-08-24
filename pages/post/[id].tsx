@@ -24,6 +24,7 @@ const BlogPost: NextPage = ({ post, postId, error }: any) => {
     if (error?.type) {
       fetchPost();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
