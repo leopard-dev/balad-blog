@@ -1,3 +1,17 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "airbnb"],
+  "rules": {
+    "import/extensions": [
+      "error",
+      "always",
+      { "tsx": "never", "ts": "never", "js": "never", "jsx": "never" }
+    ],
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
+    "implicit-arrow-linebreak": "off",
+    "object-curly-newline": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-one-expression-per-line": "off"
+  }
 }

@@ -1,13 +1,14 @@
-import { memo } from "react";
+import { memo } from 'react';
 
-import { GetPostComments } from "../../../services/post/types";
-import Comment from "../../elements/Comment";
+import { GetPostComments } from '../../../services/post/types';
+import Comment from '../../elements/Comment';
 
 type CommentProps = {
   childNodes: CommentProps[];
 } & GetPostComments;
 
 type Props = {
+  // eslint-disable-next-line no-unused-vars
   onAddNewComment: (comment: GetPostComments) => void;
   comments: CommentProps[];
 };

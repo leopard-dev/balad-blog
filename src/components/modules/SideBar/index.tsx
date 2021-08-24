@@ -1,10 +1,10 @@
-import Search from "../Search";
-import Navigation from "../Navigation";
-import styles from "./styles.module.scss";
+import Search from '../Search';
+import Navigation from '../Navigation';
+import styles from './styles.module.scss';
 
 function Sidebar() {
   return (
-    <aside className={styles["app-sidebar"]}>
+    <aside className={styles['app-sidebar']}>
       <Search />
       <Navigation />
     </aside>

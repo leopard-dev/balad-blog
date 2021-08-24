@@ -1,106 +1,103 @@
-import type { NextPage } from "next";
-import { useRouter } from "next/dist/client/router";
-import React, { useMemo, useState } from "react";
+import type { NextPage } from 'next';
+import { useRouter } from 'next/dist/client/router';
+import React, { useMemo, useState } from 'react';
 
-import InputField from "../src/components/elements/InputField";
-import useAuthentication from "../src/hooks/use-authentication";
-import { useForm } from "../src/hooks/use-form";
-import useRedirect from "../src/hooks/use-redirect";
-import { createUser, getUserByUsername } from "../src/services/user";
-import debounce from "../src/utils/debounce";
+import InputField from '../src/components/elements/InputField';
+import useAuthentication from '../src/hooks/use-authentication';
+import { useForm } from '../src/hooks/use-form';
+import useRedirect from '../src/hooks/use-redirect';
+import { createUser, getUserByUsername } from '../src/services/user';
+import debounce from '../src/utils/debounce';
 
 const Register: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, serServerError] = useState<string | undefined>(undefined);
   const router = useRouter();
   const { isAuthenticated } = useAuthentication();
-  useRedirect({ redirectTo: "/", rule: isAuthenticated });
+  useRedirect({ redirectTo: '/', rule: isAuthenticated });
 
   // this memorization could be extracted into it's own hook
   const validateUsername = useMemo(
-    () =>
-      debounce(async (value) => {
-        try {
-          await getUserByUsername(value);
-          return false;
-        } catch {
-          return true;
-        }
-      }),
-    []
+    () => debounce(async (value) => {
+      try {
+        await getUserByUsername(value);
+        return false;
+      } catch {
+        return true;
+      }
+    }),
+    [],
   );
 
-  const { handleSubmit, handleChange, data, errors } = useForm({
+  const {
+    handleSubmit, handleChange, data, errors,
+  } = useForm({
     validations: {
       email: {
         required: {
-          message: "وارد کردن ایمل الزامی است",
+          message: 'وارد کردن ایمل الزامی است',
           value: true,
         },
         custom: {
-          isValid: (value) => {
-            return /^\S+@\S+\.\S+$/.test(value);
-          },
+          isValid: (value) => /^\S+@\S+\.\S+$/.test(value),
           validateOnChange: true,
-          message: "لطفا یک ایمیل معتبر وارد نمایید",
+          message: 'لطفا یک ایمیل معتبر وارد نمایید',
         },
       },
       password: {
         required: {
-          message: "وارد کردن کلمه عبور الزامی است",
+          message: 'وارد کردن کلمه عبور الزامی است',
           value: true,
         },
       },
       username: {
         required: {
-          message: "وارد کردن نام کاربری الزامی است",
+          message: 'وارد کردن نام کاربری الزامی است',
           value: true,
         },
         custom: {
           isValid: validateUsername,
           validateOnChange: true,
-          message: "نام کاربری توسط فرد دیگری گرفته شده است.",
+          message: 'نام کاربری توسط فرد دیگری گرفته شده است.',
         },
       },
       passwordRepeat: {
         required: {
-          message: "وارد کردن تکرار پسورد الزامی است",
+          message: 'وارد کردن تکرار پسورد الزامی است',
           value: true,
         },
         custom: {
-          isValid: (value, data) => {
-            return value === data.password;
-          },
+          isValid: (value, data) => value === data.password,
           validateOnChange: true,
 
-          message: "کلمه عبور و تکرار آن با هم برابر نیستند.",
+          message: 'کلمه عبور و تکرار آن با هم برابر نیستند.',
         },
       },
       title: {
         required: {
-          message: "وارد کردن تیتر الزامی است",
+          message: 'وارد کردن تیتر الزامی است',
           value: true,
         },
       },
     },
     initialValues: {
-      email: "",
-      password: "",
-      username: "",
-      passwordRepeat: "",
-      title: "",
+      email: '',
+      password: '',
+      username: '',
+      passwordRepeat: '',
+      title: '',
     },
     onSubmit: (values) => {
       serServerError(undefined);
       setIsLoading(true);
       createUser(values as any)
-        .then((res) => router.push("/login"))
+        .then((res) => router.push('/login'))
         .catch((error) => {
           if (error.message) {
             serServerError(error.message);
             return;
           }
-          serServerError("خطای در اتصال به سرور !");
+          serServerError('خطای در اتصال به سرور !');
         })
         .finally(() => {
           setIsLoading(false);
@@ -119,7 +116,7 @@ const Register: NextPage = () => {
             label="نام "
             type="text"
             name="title"
-            onChange={handleChange("title")}
+            onChange={handleChange('title')}
             error={errors.title}
           />
           <InputField
@@ -127,7 +124,7 @@ const Register: NextPage = () => {
             type="text"
             name="username"
             value={data.username}
-            onChange={handleChange("username")}
+            onChange={handleChange('username')}
             error={errors.username}
           />
           <InputField
@@ -135,7 +132,7 @@ const Register: NextPage = () => {
             type="email"
             name="email"
             value={data.email}
-            onChange={handleChange("email")}
+            onChange={handleChange('email')}
             error={errors.email}
           />
           <InputField
@@ -143,7 +140,7 @@ const Register: NextPage = () => {
             type="password"
             name="password"
             value={data.password}
-            onChange={handleChange("password")}
+            onChange={handleChange('password')}
             error={errors.password}
           />
           <InputField
@@ -151,7 +148,7 @@ const Register: NextPage = () => {
             type="password"
             name="passwordRepeat"
             value={data.passwordRepeat}
-            onChange={handleChange("passwordRepeat")}
+            onChange={handleChange('passwordRepeat')}
             error={errors.passwordRepeat}
           />
           {serverError && <p>{serverError}</p>}

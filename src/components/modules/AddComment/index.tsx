@@ -1,12 +1,13 @@
-import clsx from "clsx";
-import { useCallback, useState } from "react";
+import clsx from 'clsx';
+import { useCallback, useState } from 'react';
 
-import { useForm } from "../../../hooks/use-form";
-import { postComment } from "../../../services/post";
-import { GetPostComments } from "../../../services/post/types";
-import { getLocaleDay } from "../../../utils/date";
-import InputField from "../../elements/InputField";
-import styles from "./styles.module.scss";
+import { useForm } from '../../../hooks/use-form';
+import useKeyDownSubmit from '../../../hooks/use-key-down-submit';
+import { postComment } from '../../../services/post';
+import { GetPostComments } from '../../../services/post/types';
+import { getLocaleDay } from '../../../utils/date';
+import InputField from '../../elements/InputField';
+import styles from './styles.module.scss';
 
 type Props = {
   postId: number;
@@ -38,60 +39,53 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
             setRequestErrors(e.errors);
             return;
           }
-          setRequestErrors(["خطا در اتصال به سرور"]);
+          setRequestErrors(['خطا در اتصال به سرور']);
         })
         .finally(() => setIsLoading(false));
     },
-    [parentId, postId]
+    [parentId, postId],
   );
 
-  const { handleSubmit, handleChange, data, errors, clearForm, submit } =
-    useForm({
-      validations: {
-        author: {
-          required: { message: "وارد کردن نام الزامی است", value: true },
-        },
-        body: {
-          required: { message: "وارد کردن نظر الزامی است", value: true },
-        },
+  const {
+    handleSubmit, handleChange, data, errors, clearForm, submit,
+  } = useForm({
+    validations: {
+      author: {
+        required: { message: 'وارد کردن نام الزامی است', value: true },
       },
-      onSubmit: submitComment,
-      initialValues: {
-        author: "",
-        body: "",
+      body: {
+        required: { message: 'وارد کردن نظر الزامی است', value: true },
       },
-    });
-
-  const keyDownEventHandler = useCallback(
-    (e: any) => {
-      if ((e.metaKey || e.ctrlKey) && e.code === "Enter") {
-        e.preventDefault();
-        submit();
-      }
     },
-    [submit]
-  );
+    onSubmit: submitComment,
+    initialValues: {
+      author: '',
+      body: '',
+    },
+  });
+
+  const keyDownEventHandler = useKeyDownSubmit(submit);
 
   return (
-    <section className={styles["add-comment"]}>
+    <section className={styles['add-comment']}>
       <h3 className="h4">اضافه کردن کامنت جدید</h3>
       <form onSubmit={handleSubmit} onKeyDown={keyDownEventHandler}>
         <fieldset disabled={isLoading}>
           <InputField
             label="نام شما"
             value={data.author}
-            onChange={handleChange("author")}
+            onChange={handleChange('author')}
             error={errors.author}
           />
           <InputField
             label="نظر شما"
             value={data.body}
-            onChange={handleChange("body")}
+            onChange={handleChange('body')}
             inputType="textarea"
             error={errors.body}
           />
           {requestErrors.length > 0 && (
-            <ul className={styles["add-comment__error"]}>
+            <ul className={styles['add-comment__error']}>
               {requestErrors.map((item) => (
                 <li key={item}>{item}</li>
               ))}
@@ -100,12 +94,12 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
           <button
             type="submit"
             className={clsx(
-              "btn",
-              "btn-primary",
-              styles["add-comment__submit-btn"]
+              'btn',
+              'btn-primary',
+              styles['add-comment__submit-btn'],
             )}
           >
-            {isLoading ? "لطفا صبر کنید" : "ثبت نظر"}
+            {isLoading ? 'لطفا صبر کنید' : 'ثبت نظر'}
           </button>
         </fieldset>
       </form>

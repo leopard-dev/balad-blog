@@ -1,11 +1,11 @@
-import type { NextPage } from "next";
-import { useRouter } from "next/dist/client/router";
-import { useEffect, useState } from "react";
+import type { NextPage } from 'next';
+import { useRouter } from 'next/dist/client/router';
+import { useEffect, useState } from 'react';
 
-import BlogPostListItem from "../src/components/modules/BlogPostListItem";
-import { useSearchHistory } from "../src/providers/SearchHistoryProvider";
-import { getAllPosts } from "../src/services/post";
-import { GetPostsResponse } from "../src/services/post/types";
+import BlogPostListItem from '../src/components/modules/BlogPostListItem';
+import { useSearchHistory } from '../src/providers/SearchHistoryProvider';
+import { getAllPosts } from '../src/services/post';
+import { GetPostsResponse } from '../src/services/post/types';
 
 const Search: NextPage = () => {
   const { query } = useRouter();
@@ -15,7 +15,7 @@ const Search: NextPage = () => {
   const { addHistory } = useSearchHistory();
 
   const fetchPosts = (query: unknown) => {
-    if (typeof query !== "string") {
+    if (typeof query !== 'string') {
       return;
     }
     setIsLoading(true);
@@ -27,7 +27,7 @@ const Search: NextPage = () => {
   };
 
   useEffect(() => {
-    if (typeof query.q !== "string") {
+    if (typeof query.q !== 'string') {
       return;
     }
     fetchPosts(query.q);

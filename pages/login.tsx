@@ -1,29 +1,31 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import InputField from "../src/components/elements/InputField";
-import useAuthentication from "../src/hooks/use-authentication";
-import { useForm } from "../src/hooks/use-form";
-import useRedirect from "../src/hooks/use-redirect";
-import { loginUser } from "../src/services/user";
+import type { NextPage } from 'next';
+import InputField from '../src/components/elements/InputField';
+import useAuthentication from '../src/hooks/use-authentication';
+import { useForm } from '../src/hooks/use-form';
+import useRedirect from '../src/hooks/use-redirect';
+import { loginUser } from '../src/services/user';
 
-import type { NextPage } from "next";
 const Login: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, serServerError] = useState<string | undefined>(undefined);
   const { login, isAuthenticated } = useAuthentication();
-  useRedirect({ redirectTo: "/", rule: isAuthenticated });
+  useRedirect({ redirectTo: '/', rule: isAuthenticated });
 
-  const { handleSubmit, handleChange, data, errors } = useForm({
+  const {
+    handleSubmit, handleChange, data, errors,
+  } = useForm({
     validations: {
       username: {
         required: {
-          message: "وارد کردن نام الزامی است",
+          message: 'وارد کردن نام الزامی است',
           value: true,
         },
       },
       password: {
         required: {
-          message: "وارد کردن کلمه عبور الزامی است",
+          message: 'وارد کردن کلمه عبور الزامی است',
           value: true,
         },
       },
@@ -38,15 +40,15 @@ const Login: NextPage = () => {
             serServerError(error.message);
             return;
           }
-          serServerError("خطای در اتصال به سرور !");
+          serServerError('خطای در اتصال به سرور !');
         })
         .finally(() => {
           setIsLoading(false);
         });
     },
     initialValues: {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     },
   });
 
@@ -58,7 +60,7 @@ const Login: NextPage = () => {
           label="نام کاربری"
           type="text"
           name="username"
-          onChange={handleChange("username")}
+          onChange={handleChange('username')}
           error={errors.username}
         />
         <InputField
@@ -66,7 +68,7 @@ const Login: NextPage = () => {
           label="کلمه عبور"
           type="password"
           name="password"
-          onChange={handleChange("password")}
+          onChange={handleChange('password')}
           error={errors.password}
         />
         {serverError && <p className="text-red">{serverError}</p>}

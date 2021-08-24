@@ -1,21 +1,28 @@
-import type { NextPage } from "next";
-import React from "react";
-import AddPost from "../src/components/modules/AddPost";
+import type { NextPage } from 'next';
 
-import BlogPostListItem from "../src/components/modules/BlogPostListItem";
-import useAuthentication from "../src/hooks/use-authentication";
-import { usePosts } from "../src/providers/PostProvider";
-import { getAllPosts } from "../src/services/post";
-import { GetPostsResponse } from "../src/services/post/types";
-import createHookLogicalWrapper from "../src/utils/create-hook-logical-wrappe";
+import AddPost from '../src/components/modules/AddPost';
+import BlogPostListItem from '../src/components/modules/BlogPostListItem';
+import useAuthentication from '../src/hooks/use-authentication';
+import { usePosts } from '../src/providers/PostProvider';
+import { getAllPosts } from '../src/services/post';
+import { GetPostsResponse } from '../src/services/post/types';
+import { SSRErrorResponse } from '../src/types';
+import createHookLogicalWrapper from '../src/utils/create-hook-logical-wrappe';
 
 const IsAuthenticated = createHookLogicalWrapper(
   useAuthentication,
-  (ctx) => ctx.isAuthenticated
+  (ctx) => ctx.isAuthenticated,
 );
 
-const Home: NextPage = () => {
-  const { isError, isLoading, posts, fetchPosts } = usePosts();
+type Props = {
+  posts: GetPostsResponse[];
+  error: SSRErrorResponse | null;
+};
+
+const Home: NextPage<Props> = () => {
+  const {
+    isError, isLoading, posts, fetchPosts,
+  } = usePosts();
   return (
     <>
       {isLoading && <p>لطفا صبر کنید...</p>}
@@ -39,13 +46,14 @@ const Home: NextPage = () => {
 };
 
 export async function getServerSideProps() {
-  let posts: GetPostsResponse[] | null = null;
-  let error: any = null;
+  let posts: GetPostsResponse[] = [];
+  let error: SSRErrorResponse | null = null;
+
   try {
     posts = await getAllPosts();
   } catch (e) {
     error = {
-      type: "failed_to_fetch_posts",
+      type: 'failed_to_fetch_posts',
     };
   }
 

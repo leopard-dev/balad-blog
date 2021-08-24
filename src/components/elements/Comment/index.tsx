@@ -1,12 +1,14 @@
-import clsx from "clsx";
-import React, { useState } from "react";
+/* eslint-disable camelcase */
+import clsx from 'clsx';
+import { ReactNode, useState } from 'react';
 
-import { GetPostComments } from "../../../services/post/types";
-import AddComment from "../../modules/AddComment";
-import styles from "./styles.module.scss";
+import { GetPostComments } from '../../../services/post/types';
+import AddComment from '../../modules/AddComment';
+import styles from './styles.module.scss';
 
 type Props = {
-  children?: React.ReactNode;
+  children?: ReactNode;
+  // eslint-disable-next-line no-unused-vars
   onAddNewComment: (comment: GetPostComments) => void;
 } & GetPostComments;
 
@@ -24,16 +26,15 @@ function Comment({
 
   return (
     <article
-      className={clsx(
-        styles["comment"],
-        parent_id && styles["comment--is-child"]
-      )}
+      className={clsx(styles.comment, parent_id && styles['comment--is-child'])}
       id={`#c${id}`}
     >
       <link href={`#c${id}`} />
-      <footer className={styles["comment__footer"]}>
+      <footer className={styles.comment__footer}>
         <p className="comment__footer-element">
-          ارسال شده توسط: <span>{author}</span>
+          ارسال شده توسط:
+          {' '}
+          <span>{author}</span>
         </p>
         <p className="comment__footer-element">{date}</p>
       </footer>
@@ -49,6 +50,7 @@ function Comment({
         />
       ) : (
         <button
+          type="button"
           onClick={() => setIsReplying(true)}
           className="btn btn-secondary"
         >
@@ -59,5 +61,9 @@ function Comment({
     </article>
   );
 }
+
+Comment.defaultProps = {
+  children: null,
+};
 
 export default Comment;
