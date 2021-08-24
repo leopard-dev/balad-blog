@@ -10,10 +10,11 @@ export const getUserByUsername = async (
   username: string
 ): Promise<GetUserDetails> => {
   const res = await fetch(`${API_URL}/users/${username}`);
-  if (!res.ok) {
-    throw new Error("something went wrong");
+  if (res.ok) {
+    return res.json();
+  } else {
+    throw await res.json();
   }
-  throw await res.json();
 };
 
 export const createUser = async (payload: PostCreateUserPayload) => {
