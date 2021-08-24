@@ -10,6 +10,7 @@ export const getUserByUsername = async (
   username: string
 ): Promise<GetUserDetails> => {
   const res = await fetch(`${API_URL}/users/${username}`);
+
   if (res.ok) {
     return res.json();
   } else {
@@ -26,6 +27,7 @@ export const createUser = async (payload: PostCreateUserPayload) => {
     },
     body: JSON.stringify(payload),
   });
+
   if (res.ok) {
     return res.json();
   } else {
@@ -44,6 +46,7 @@ export const loginUser = async (
     },
     body: JSON.stringify(payload),
   });
+
   if (res.ok) {
     return res.json();
   } else {
