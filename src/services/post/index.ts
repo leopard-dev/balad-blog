@@ -1,5 +1,5 @@
 import { API_URL } from "../../constants";
-import { GetPostComments, GetPostsResponse } from "./types";
+import { GetPostComments, GetPostsResponse, PostNewComment } from "./types";
 
 export const getAllPosts = async (): Promise<GetPostsResponse[]> => {
   const res = await fetch(`${API_URL}/posts`);
@@ -27,4 +27,20 @@ export const getPostCommentsById = async (
     throw new Error("something went wrong");
   }
   return res.json();
+};
+
+export const postComment = async (postId: number, body: PostNewComment) => {
+  const res = await fetch(`${API_URL}/posts/${postId}/comments`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  if (res.ok) {
+    return res.json();
+  } else {
+    throw await res.json();
+  }
 };
