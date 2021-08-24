@@ -11,7 +11,8 @@ import styles from './styles.module.scss';
 
 type Props = {
   postId: number;
-  parentId?: number;
+  parentId?: number | null;
+  // eslint-disable-next-line no-unused-vars
   onCommentSubmit: (comment: GetPostComments) => void;
 };
 
@@ -32,6 +33,7 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
       })
         .then((res) => {
           onCommentSubmit(res);
+          // eslint-disable-next-line no-use-before-define
           clearForm();
         })
         .catch((e) => {
@@ -46,29 +48,29 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
     [parentId, postId],
   );
 
-  const {
-    handleSubmit, handleChange, data, errors, clearForm, submit,
-  } = useForm({
-    validations: {
-      author: {
-        required: { message: 'وارد کردن نام الزامی است', value: true },
+  const { handleSubmit, handleChange, data, errors, clearForm, submit } =
+    useForm({
+      validations: {
+        author: {
+          required: { message: 'وارد کردن نام الزامی است', value: true },
+        },
+        body: {
+          required: { message: 'وارد کردن نظر الزامی است', value: true },
+        },
       },
-      body: {
-        required: { message: 'وارد کردن نظر الزامی است', value: true },
+      onSubmit: submitComment,
+      initialValues: {
+        author: '',
+        body: '',
       },
-    },
-    onSubmit: submitComment,
-    initialValues: {
-      author: '',
-      body: '',
-    },
-  });
+    });
 
   const keyDownEventHandler = useKeyDownSubmit(submit);
 
   return (
     <section className={styles['add-comment']}>
       <h3 className="h4">اضافه کردن کامنت جدید</h3>
+      {/*  eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <form onSubmit={handleSubmit} onKeyDown={keyDownEventHandler}>
         <fieldset disabled={isLoading}>
           <InputField
@@ -106,5 +108,9 @@ function AddComment({ postId, parentId, onCommentSubmit }: Props) {
     </section>
   );
 }
+
+AddComment.defaultProps = {
+  parentId: null,
+};
 
 export default AddComment;
