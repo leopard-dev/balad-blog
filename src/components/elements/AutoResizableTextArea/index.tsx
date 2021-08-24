@@ -8,13 +8,9 @@ type Props = {
 } & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const AutoResizableTextArea = ({ error, ...props }: Props) => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-
   const onChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    textAreaRef.current!.style.height = "auto";
-    textAreaRef.current!.style.height = `${
-      textAreaRef.current!.scrollHeight
-    }px`;
+    event.target!.style.height = "auto";
+    event.target!.style.height = `${event.target!.scrollHeight}px`;
     if (props.onChange) {
       props.onChange(event);
     }
@@ -22,16 +18,15 @@ const AutoResizableTextArea = ({ error, ...props }: Props) => {
 
   return (
     <textarea
-      className={clsx("form-control", styles["textarea"], {
+      {...props}
+      className={clsx("form-control", styles["textarea"], props.className, {
         "is-invalid": error,
       })}
-      ref={textAreaRef}
-      rows={1}
       style={{
         height: "auto",
+        minHeight: "100px",
       }}
       onChange={onChangeHandler}
-      {...props}
     />
   );
 };
