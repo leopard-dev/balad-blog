@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import BlogPostListItem from '../../src/components/modules/BlogPostListItem';
 import CommentsSection from '../../src/components/modules/CommentsSection';
@@ -24,7 +24,7 @@ const BlogPost: NextPage = ({ post, postId, error }: any) => {
     if (error?.type) {
       fetchPost();
     }
-  }, [error?.type]);
+  }, []);
 
   return (
     <>
@@ -32,7 +32,7 @@ const BlogPost: NextPage = ({ post, postId, error }: any) => {
       {isError && (
         <p>
           خطایی رخ داد
-          <button className="btn btn-link" onClick={fetchPost}>
+          <button type="button" className="btn btn-link" onClick={fetchPost}>
             تلاش مجدد
           </button>
         </p>
