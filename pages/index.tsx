@@ -20,16 +20,14 @@ type Props = {
 };
 
 const Home: NextPage<Props> = () => {
-  const {
-    isError, isLoading, posts, fetchPosts,
-  } = usePosts();
+  const { isError, isLoading, posts, fetchPosts } = usePosts();
   return (
     <>
       {isLoading && <p>لطفا صبر کنید...</p>}
       {isError && (
         <p>
           خطایی رخ داد
-          <button className="btn btn-link" onClick={fetchPosts}>
+          <button type="button" className="btn btn-link" onClick={fetchPosts}>
             تلاش مجدد
           </button>
         </p>
