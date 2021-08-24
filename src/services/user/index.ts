@@ -25,6 +25,7 @@ export const createUser = async (payload: PostCreateUserPayload) => {
     },
     body: JSON.stringify(payload),
   });
+
   if (res.ok) {
     return res.json();
   }
@@ -42,6 +43,7 @@ export const loginUser = async (
     },
     body: JSON.stringify(payload),
   });
+
   if (res.ok) {
     return res.json();
   }

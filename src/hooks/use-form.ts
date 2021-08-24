@@ -37,6 +37,7 @@ export const useForm = <T extends Record<keyof T, string> = {}>(options?: {
         }));
         return;
       }
+
       setErrors((old) => ({
         ...old,
         [key]: options?.validations?.[key]?.custom?.message,
@@ -48,9 +49,11 @@ export const useForm = <T extends Record<keyof T, string> = {}>(options?: {
     <S extends unknown>(key: keyof T, sanitizeFn?: (value: string) => S) =>
     (e: ChangeEvent<HTMLInputElement & HTMLSelectElement>) => {
       const value = sanitizeFn ? sanitizeFn(e.target.value) : e.target.value;
+
       if (options?.validations?.[key]?.custom?.validateOnChange) {
         validateOnChange(key, value as string);
       }
+
       setData({
         ...data,
         [key]: value,
@@ -59,18 +62,22 @@ export const useForm = <T extends Record<keyof T, string> = {}>(options?: {
 
   const submit = async () => {
     const validations = options?.validations;
+
     if (validations) {
       let valid = true;
       const newErrors: ErrorRecord<T> = {};
+
       for (const key in validations) {
         const value = data[key];
         const validation = validations[key];
+
         if (validation?.required?.value && !value.trim()) {
           valid = false;
           newErrors[key] = validation?.required?.message;
         }
 
         const custom = validation?.custom;
+
         if (custom?.isValid && !(await custom.isValid(value, data))) {
           valid = false;
           newErrors[key] = custom.message;
