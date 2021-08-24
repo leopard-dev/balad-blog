@@ -1,22 +1,28 @@
-import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import type { NextPage } from 'next';
+import { useEffect, useState } from 'react';
 
-import AddPost from "../src/components/modules/AddPost";
-import BlogPostListItem from "../src/components/modules/BlogPostListItem";
-import useAuthentication from "../src/hooks/use-authentication";
-import { getAllPosts } from "../src/services/post";
-import { GetPostsResponse } from "../src/services/post/types";
-import createHookLogicalWrapper from "../src/utils/create-hook-logical-wrappe";
+import AddPost from '../src/components/modules/AddPost';
+import BlogPostListItem from '../src/components/modules/BlogPostListItem';
+import useAuthentication from '../src/hooks/use-authentication';
+import { getAllPosts } from '../src/services/post';
+import { GetPostsResponse } from '../src/services/post/types';
+import { SSRErrorResponse } from '../src/types';
+import createHookLogicalWrapper from '../src/utils/create-hook-logical-wrappe';
 
 const IsAuthenticated = createHookLogicalWrapper(
   useAuthentication,
-  (ctx) => ctx.isAuthenticated
+  (ctx) => ctx.isAuthenticated,
 );
 
-const Home: NextPage = ({ posts, error }: any) => {
+type Props = {
+  posts: GetPostsResponse[];
+  error: SSRErrorResponse | null;
+};
+
+const Home: NextPage<Props> = ({ posts, error }) => {
   const [isLoading, setIsLoading] = useState(posts.length === 0);
-  const [isError, setIsError] = useState(!!error);
-  const [internalPosts, setInternalPosts] = useState<GetPostsResponse[]>(posts);
+  const [isError, setIsError] = useState(Boolean(error));
+  const [internalPosts, setInternalPosts] = useState(posts);
 
   const fetchPosts = () => {
     setIsLoading(true);
@@ -59,12 +65,13 @@ const Home: NextPage = ({ posts, error }: any) => {
 
 export async function getServerSideProps() {
   let posts: GetPostsResponse[] = [];
-  let error: any = null;
+  let error: SSRErrorResponse | null = null;
+
   try {
     posts = await getAllPosts();
   } catch (e) {
     error = {
-      type: "failed_to_fetch",
+      type: 'failed_to_fetch',
     };
   }
 
