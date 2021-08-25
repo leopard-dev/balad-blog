@@ -4,16 +4,18 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
-} from "react";
+} from 'react';
 
-import { getAllPosts } from "../../services/post";
-import { GetPostsResponse } from "../../services/post/types";
+import { getAllPosts } from '../../services/post';
+import { GetPostsResponse } from '../../services/post/types';
 
 type PostsContextType = {
   posts: GetPostsResponse[];
   isLoading: boolean;
   isError: boolean;
+  // eslint-disable-next-line no-unused-vars
   onPostCreated: (newPost: GetPostsResponse) => void;
   fetchPosts: () => void;
 };
@@ -37,6 +39,7 @@ const PostProvider: FC<Props> = ({ children, initialPosts, error }) => {
   const [posts, setPosts] = useState<GetPostsResponse[]>(initialPosts ?? []);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(Boolean(error));
+
   const fetchPosts = useCallback(() => {
     setIsLoading(true);
     setIsError(false);
@@ -47,7 +50,7 @@ const PostProvider: FC<Props> = ({ children, initialPosts, error }) => {
   }, []);
 
   useEffect(() => {
-    if (error?.type === "failed_to_fetch_posts") {
+    if (error?.type === 'failed_to_fetch_posts') {
       fetchPosts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,15 +58,21 @@ const PostProvider: FC<Props> = ({ children, initialPosts, error }) => {
 
   const onPostCreated = useCallback(
     (newPost: GetPostsResponse) => setPosts((old) => [newPost, ...old]),
-    []
+    [],
   );
-  return (
-    <PostContext.Provider
-      value={{ posts, onPostCreated, isLoading, isError, fetchPosts }}
-    >
-      {children}
-    </PostContext.Provider>
+
+  const value = useMemo(
+    () => ({
+      posts,
+      onPostCreated,
+      isLoading,
+      isError,
+      fetchPosts,
+    }),
+    [posts, onPostCreated, isLoading, isError, fetchPosts],
   );
+
+  return <PostContext.Provider value={value}>{children}</PostContext.Provider>;
 };
 
 export const usePosts = () => useContext(PostContext);
