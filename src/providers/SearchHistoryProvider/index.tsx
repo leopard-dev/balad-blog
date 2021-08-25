@@ -1,34 +1,44 @@
-import * as React from "react";
+import {
+  createContext,
+  FC,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
 type SearchHistoryContextType = {
   history: string[];
+  // eslint-disable-next-line no-unused-vars
   addHistory: (elementToAdd: string) => void;
 };
 
-export const SearchHistoryContext =
-  React.createContext<SearchHistoryContextType>({
-    history: [],
-    addHistory: () => {},
-  });
+export const SearchHistoryContext = createContext<SearchHistoryContextType>({
+  history: [],
+  addHistory: () => {},
+});
 
-const SearchHistoryProvider: React.FC = ({ children }) => {
-  const [history, setHistory] = React.useState<string[]>([]);
-  const addHistory = React.useCallback((elementToAdd: string) => {
+const SearchHistoryProvider: FC = ({ children }) => {
+  const [history, setHistory] = useState<string[]>([]);
+
+  const addHistory = useCallback((elementToAdd: string) => {
     setHistory((old) => {
       if (!old.includes(elementToAdd)) {
         return [elementToAdd, ...old];
-      } else {
-        return old;
       }
+      return old;
     });
   }, []);
+
+  const value = useMemo(() => ({ history, addHistory }), [history, addHistory]);
+
   return (
-    <SearchHistoryContext.Provider value={{ history, addHistory }}>
+    <SearchHistoryContext.Provider value={value}>
       {children}
     </SearchHistoryContext.Provider>
   );
 };
 
-export const useSearchHistory = () => React.useContext(SearchHistoryContext);
+export const useSearchHistory = () => useContext(SearchHistoryContext);
 
 export default SearchHistoryProvider;
